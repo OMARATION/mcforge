@@ -752,5 +752,14 @@ namespace MCForge
             }
             return Group.standard.color;
         }
+
+        public static bool LevelExists(string givenName)
+        {
+            if (File.Exists("levels/" + givenName + ".lvl"))
+            {
+                return true;
+            }
+            else return false;
+        }
     }
 }

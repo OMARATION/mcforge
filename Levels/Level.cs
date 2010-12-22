@@ -102,6 +102,8 @@ namespace MCForge
         public struct Zone { public ushort smallX, smallY, smallZ, bigX, bigY, bigZ; public string Owner; }
         public List<Zone> ZoneList;
 
+        public ushort[,] shadows;
+
         List<Check> ListCheck = new List<Check>();  //A list of blocks that need to be updated
         List<Update> ListUpdate = new List<Update>();  //A list of block to change after calculation
 
@@ -176,6 +178,12 @@ namespace MCForge
                     break;
             }
 
+            this.ResetSpawn();
+            
+        }
+
+        public void ResetSpawn()
+        {
             spawnx = (ushort)(width / 2);
             spawny = (ushort)(depth * 0.75f);
             spawnz = (ushort)(height / 2);
@@ -260,10 +268,18 @@ namespace MCForge
             IntToPos(b, out x, out y, out z);
             return GetTile(x, y, z);
         }
+        public byte GetTile(int x, int y, int z)
+        {
+            return this.GetTile((ushort)x, (ushort)y, (ushort)z);
+        }
         public void SetTile(ushort x, ushort y, ushort z, byte type)
         {
             blocks[x + width * z + width * height * y] = type;
             //blockchanges[x + width * z + width * height * y] = pName;
+        }
+        public void SetTile(int x, int y, int z, byte type)
+        {
+            this.SetTile((ushort)x, (ushort)y, (ushort)z, type);
         }
 
         public static Level Find(string levelName)
@@ -652,6 +668,60 @@ namespace MCForge
                 Server.s.Log("Level unchanged, skipping backup");
                 return -1;
             }
+        }
+
+        public static Level LoadHeaderOnly(string givenName)
+        {
+            string path = "levels/" + givenName + ".lvl";
+            if (File.Exists(path))
+            {
+                FileStream fs = File.OpenRead(path);
+                try
+                {
+                    GZipStream gs = new GZipStream(fs, CompressionMode.Decompress);
+                    byte[] ver = new byte[2];
+                    gs.Read(ver, 0, ver.Length);
+                    ushort version = BitConverter.ToUInt16(ver, 0);
+                    Level level;
+                    if (version == 1874)
+                    {
+                        byte[] header = new byte[16]; gs.Read(header, 0, header.Length);
+                        ushort width = BitConverter.ToUInt16(header, 0);
+                        ushort height = BitConverter.ToUInt16(header, 2);
+                        ushort depth = BitConverter.ToUInt16(header, 4);
+                        level = new Level("temp", width, depth, height, "empty");
+                        level.spawnx = BitConverter.ToUInt16(header, 6);
+                        level.spawnz = BitConverter.ToUInt16(header, 8);
+                        level.spawny = BitConverter.ToUInt16(header, 10);
+                        level.rotx = header[12]; level.roty = header[13];
+                        //level.permissionvisit = (LevelPermission)header[14];
+                        //level.permissionbuild = (LevelPermission)header[15];
+                    }
+                    else
+                    {
+                        byte[] header = new byte[12]; gs.Read(header, 0, header.Length);
+                        ushort width = version;
+                        ushort height = BitConverter.ToUInt16(header, 0);
+                        ushort depth = BitConverter.ToUInt16(header, 2);
+                        level = new Level("temp", width, depth, height, "grass");
+                        level.spawnx = BitConverter.ToUInt16(header, 4);
+                        level.spawnz = BitConverter.ToUInt16(header, 6);
+                        level.spawny = BitConverter.ToUInt16(header, 8);
+                        level.rotx = header[10]; level.roty = header[11];
+                    }
+                    level.permissionbuild = (LevelPermission)11;
+
+                    level.name = givenName;
+
+                    gs.Close();
+
+                    return level;
+                }
+                catch (Exception ex) { }
+                finally { fs.Close(); }
+            }
+
+            return null;
         }
 
         public static Level Load(string givenName) { return Load(givenName, 0); }
@@ -3505,6 +3575,55 @@ namespace MCForge
                 if (p.level==this) foundPlayers.Add(p);
             }
             return foundPlayers;
+        }
+
+        public void CalculateShadows()
+        {
+            if (shadows != null) return;
+            else shadows = new ushort[width, depth];
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < depth; y++)
+                {
+                    for (int h = height; h >= 0; h--)
+                    {
+                        if (GetTile(x, y, h) > 0)
+                        {
+                            shadows[x, y] = (ushort)h;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        public void MakeFloodBarrier()
+        {
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < depth; y++)
+                {
+                    SetTile(x, y, 0, Block.blackrock);
+                }
+            }
+
+            for (int x = 0; x < width; x++)
+            {
+                for (int h = 0; h < height / 2; h++)
+                {
+                    SetTile(x, 0, h, Block.blackrock);
+                    SetTile(x, depth - 1, h, Block.blackrock);
+                }
+            }
+
+            for (int y = 0; y < depth; y++)
+            {
+                for (int h = 0; h < height / 2; h++)
+                {
+                    SetTile(0, y, h, Block.blackrock);
+                    SetTile(width - 1, y, h, Block.blackrock);
+                }
+            }
         }
 
     }

@@ -38,6 +38,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -48,6 +49,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>Lawl.ico</ApplicationIcon>
@@ -260,6 +262,23 @@
     <Compile Include="Commands\CmdText.cs" />
     <Compile Include="Commands\CmdView.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="GUI\MapEditor\AddWorldPopup.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\MapEditor\AddWorldPopup.Designer.cs">
+      <DependentUpon>AddWorldPopup.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\MapEditor\CustomPictureBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="GUI\MapEditor\IsoCat.cs" />
+    <Compile Include="GUI\MapEditor\Noise.cs" />
+    <Compile Include="GUI\MapEditor\WorldListEntry.cs" />
+    <Compile Include="Resources\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="GUI\PropertyWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -304,6 +323,13 @@
     <Compile Include="Server.cs" />
     <Compile Include="ServerSettings.cs" />
     <Compile Include="Updater.cs" />
+    <EmbeddedResource Include="GUI\MapEditor\AddWorldPopup.resx">
+      <DependentUpon>AddWorldPopup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="GUI\PropertyWindow.resx">
       <DependentUpon>PropertyWindow.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -349,6 +375,8 @@
     <Content Include="Changelog.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\TilesetShadowed.png" />
+    <None Include="Resources\Tileset.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

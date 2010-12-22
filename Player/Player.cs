@@ -2394,6 +2394,7 @@ namespace MCForge
         public static bool ValidName(string name)
         {
             string allowedchars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01234567890._";
+            if (name.Length < 2 || name.Length > 16) return false;
             foreach (char ch in name) { if (allowedchars.IndexOf(ch) == -1) { return false; } } return true;
         }
         public static byte[] GZip(byte[] bytes)
