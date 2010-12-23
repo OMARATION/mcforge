@@ -171,7 +171,37 @@ namespace MCForge
                 case "ocean":
                 case "forest":
                 case "desert":
-                    Server.MapGen.GenerateMap(this, type);
+                    MapGenTemplate temp = MapGenTemplate.Default;
+                    MapGenTheme theme = MapGenTheme.Forest;
+                    switch (type)
+                    {
+                        case "island":
+                            temp = MapGenTemplate.Island;
+                            theme = MapGenTheme.Forest;
+                            break;
+                        case "mountains":
+                            temp = MapGenTemplate.Mountains;
+                            theme = MapGenTheme.Forest;
+                            break;
+                        case "ocean":
+                            temp = MapGenTemplate.Bay;
+                            theme = MapGenTheme.Forest;
+                            break;
+                        case "forest":
+                            temp = MapGenTemplate.Default;
+                            theme = MapGenTheme.Forest;
+                            break;
+                        case "desert":
+                            temp = MapGenTemplate.Default;
+                            theme = MapGenTheme.Desert;
+                            break;
+                    }
+                    
+                    MapGeneratorArgs args = MapGenerator.MakeTemplate(temp);
+                    MapGenerator gen = new MapGenerator(args);
+                    gen.ApplyTheme(theme);
+                    gen.GenerateMap(this);
+
                     break;
 
                 default:
@@ -279,7 +309,8 @@ namespace MCForge
         }
         public void SetTile(int x, int y, int z, byte type)
         {
-            this.SetTile((ushort)x, (ushort)y, (ushort)z, type);
+            // TODO: I am lazy
+            this.SetTile((ushort)x, (ushort)z, (ushort)y, type);
         }
 
         public static Level Find(string levelName)
@@ -3597,6 +3628,7 @@ namespace MCForge
             }
         }
 
+        // TODO: Change coordinate system
         public void MakeFloodBarrier()
         {
             for (int x = 0; x < width; x++)

@@ -67,12 +67,16 @@ namespace MCForge.Gui.MapEditor
             nWidthY.Validating += MapDimensionValidating;
             nHeight.Validating += MapDimensionValidating;
 
+            // TODO: Determine if we need these
             cAccess.Items.Add( "(everyone)" );
             cBuild.Items.Add( "(everyone)" );
-            foreach( PlayerClass pc in ClassList.classesByIndex ) {
-                cAccess.Items.Add( pc.ToComboBoxOption() );
-                cBuild.Items.Add( pc.ToComboBoxOption() );
+
+            foreach (Group grp in Group.GroupList)
+            {
+                cAccess.Items.Add(grp.name);
+                cBuild.Items.Add(grp.name);
             }
+
 
             tStatus1.Text = "";
             tStatus2.Text = "";
@@ -97,13 +101,16 @@ namespace MCForge.Gui.MapEditor
             }
 
             // Fill in the "Copy existing world" combobox
+            // TODO: Make this work
+            /*
             foreach( WorldListEntry otherWorld in ConfigUI.worlds ) {
                 if( otherWorld != _world ) {
                     cWorld.Items.Add( otherWorld.name + " (" + otherWorld.Description + ")" );
                     copyOptionsList.Add( otherWorld );
                 }
             }
-
+            */
+             
             // Disable "copy" tab if there are no other worlds
             if( cWorld.Items.Count > 0 ) {
                 cWorld.SelectedIndex = 0;
@@ -221,10 +228,10 @@ namespace MCForge.Gui.MapEditor
 
         void AsyncDrawCompleted( object sender, RunWorkerCompletedEventArgs e ) {
             tStatus2.Text = "";
-            if( previewImage != null && previewImage != preview.Image ) {
-                Image oldImage = preview.Image;
+            if( previewImage != null && previewImage != customPictureBox1.Image ) {
+                Image oldImage = customPictureBox1.Image;
                 if( oldImage != null ) oldImage.Dispose();
-                preview.Image = previewImage;
+                customPictureBox1.Image = previewImage;
                 bSavePreview.Enabled = true;
             }
             progressBar.Visible = false;
@@ -542,7 +549,7 @@ Dimensions: {4}×{5}×{6}
         SaveFileDialog savePreviewDialog = new SaveFileDialog();
         private void bSavePreview_Click( object sender, EventArgs e ) {
             try{
-                using(Image img = (Image)preview.Image.Clone()){
+                using(Image img = (Image)customPictureBox1.Image.Clone()){
                     if( savePreviewDialog.ShowDialog() == DialogResult.OK && savePreviewDialog.FileName != ""){
                         switch( savePreviewDialog.FilterIndex ) {
                             case 1:

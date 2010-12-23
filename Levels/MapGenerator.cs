@@ -290,10 +290,14 @@ namespace MCForge
             }
         }
 
-
         public Level GenerateMap()
         {
             Level map = new Level("newmap", (ushort)args.dimX, (ushort)args.dimY, (ushort)args.dimH, String.Empty);
+            return GenerateMap(map);
+        }
+
+        public Level GenerateMap(Level map)
+        {        
             args.waterLevel = (map.height - 1) / 2;
 
             float desiredWaterLevel = .5f;

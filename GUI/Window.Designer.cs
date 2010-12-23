@@ -109,6 +109,8 @@ namespace MCForge.Gui
             this.shutdownServer = new System.Windows.Forms.ToolStripMenuItem();
             this.btnProperties = new System.Windows.Forms.Button();
             this.btnClose = new System.Windows.Forms.Button();
+            this.toolStripMenuItem7 = new System.Windows.Forms.ToolStripSeparator();
+            this.newMapToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.mapsStrip.SuspendLayout();
@@ -188,9 +190,11 @@ namespace MCForge.Gui
             this.physicsToolStripMenuItem,
             this.unloadToolStripMenuItem,
             this.settingsToolStripMenuItem,
-            this.saveToolStripMenuItem});
+            this.saveToolStripMenuItem,
+            this.toolStripMenuItem7,
+            this.newMapToolStripMenuItem});
             this.mapsStrip.Name = "mapsStrip";
-            this.mapsStrip.Size = new System.Drawing.Size(117, 92);
+            this.mapsStrip.Size = new System.Drawing.Size(153, 142);
             // 
             // physicsToolStripMenuItem
             // 
@@ -606,6 +610,18 @@ namespace MCForge.Gui
             this.btnClose.UseVisualStyleBackColor = true;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click_1);
             // 
+            // toolStripMenuItem7
+            // 
+            this.toolStripMenuItem7.Name = "toolStripMenuItem7";
+            this.toolStripMenuItem7.Size = new System.Drawing.Size(149, 6);
+            // 
+            // newMapToolStripMenuItem
+            // 
+            this.newMapToolStripMenuItem.Name = "newMapToolStripMenuItem";
+            this.newMapToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.newMapToolStripMenuItem.Text = "New Map";
+            this.newMapToolStripMenuItem.Click += new System.EventHandler(this.newMapToolStripMenuItem_Click);
+            // 
             // Window
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -691,5 +707,7 @@ namespace MCForge.Gui
         private ToolStripMenuItem killerBlocksToolStripMenuItem;
         private ToolStripMenuItem rPChatToolStripMenuItem;
         private ToolStripMenuItem saveToolStripMenuItem;
+        private ToolStripSeparator toolStripMenuItem7;
+        private ToolStripMenuItem newMapToolStripMenuItem;
     }
 }

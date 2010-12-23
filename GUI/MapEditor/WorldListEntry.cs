@@ -43,6 +43,7 @@ namespace MCForge.Gui.MapEditor
                 Hidden = false;
             }
 
+            /* TODO: Make this work or soemthing
             if( (temp = el.Attribute( "access" )) != null ) {
                 accessClass = ClassList.ParseClass( temp.Value );
                 if( accessClass == null ) {
@@ -55,7 +56,7 @@ namespace MCForge.Gui.MapEditor
                 if( buildClass == null ) {
                     throw new Exception( "WorldListEntity: Cannot parse XML: Unrecognized class specified for \"build\" permission." );
                 }
-            }
+            }*/
         }
 
         internal string name;
@@ -154,8 +155,10 @@ namespace MCForge.Gui.MapEditor
             XElement element = new XElement( "World" );
             element.Add( new XAttribute( "name", Name ) );
             element.Add( new XAttribute( "hidden", Hidden ) );
+            /*
             if( accessClass != null ) element.Add( new XAttribute( "access", accessClass ) );
             if( buildClass != null ) element.Add( new XAttribute( "build", buildClass ) );
+             */
             return element;
         }
     }

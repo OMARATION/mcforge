@@ -84,8 +84,6 @@ namespace MCForge
         public static List<TempBan> tempBans = new List<TempBan>();
         public struct TempBan { public string name; public DateTime allowedJoin; }
 
-        public static MapGenerator MapGen;
-
         public static PerformanceCounter PCCounter = null;
         public static PerformanceCounter ProcessCounter = null;
 
@@ -302,7 +300,6 @@ namespace MCForge
                 try
                 {
                     levels = new List<Level>(Server.maps);
-                    MapGen = new MapGenerator();
 
                     Random random = new Random();
 

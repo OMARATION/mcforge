@@ -134,6 +134,7 @@
             this.nTreeSpacing = new System.Windows.Forms.NumericUpDown();
             this.lTreeSpacing = new System.Windows.Forms.Label();
             this.lMapFileOptions = new System.Windows.Forms.Label();
+            this.customPictureBox1 = new MCForge.Gui.MapEditor.CustomPictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.nWidthX)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nWidthY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nHeight)).BeginInit();
@@ -168,6 +169,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.nTreeHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nTreeSpacingVariation)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nTreeSpacing)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.customPictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // lX2
@@ -528,6 +530,7 @@
             this.previewLayout.Controls.Add(this.bPreviewPrev, 0, 1);
             this.previewLayout.Controls.Add(this.bPreviewNext, 2, 1);
             this.previewLayout.Controls.Add(this.lPreview, 1, 1);
+            this.previewLayout.Controls.Add(this.customPictureBox1, 0, 0);
             this.previewLayout.Location = new System.Drawing.Point(411, 12);
             this.previewLayout.Name = "previewLayout";
             this.previewLayout.RowCount = 2;
@@ -1508,6 +1511,14 @@
             this.lMapFileOptions.TabIndex = 55;
             this.lMapFileOptions.Text = "Map file:";
             // 
+            // customPictureBox1
+            // 
+            this.customPictureBox1.Location = new System.Drawing.Point(3, 3);
+            this.customPictureBox1.Name = "customPictureBox1";
+            this.customPictureBox1.Size = new System.Drawing.Size(576, 612);
+            this.customPictureBox1.TabIndex = 17;
+            this.customPictureBox1.TabStop = false;
+            // 
             // AddWorldPopup
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1579,6 +1590,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.nTreeHeight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nTreeSpacingVariation)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nTreeSpacing)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.customPictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1644,7 +1656,6 @@
         private System.Windows.Forms.TabPage tabFlatgrass;
         private System.Windows.Forms.TabPage tabHeightmap;
         private System.Windows.Forms.TabPage tabTerrain;
-        private CustomPictureBox preview;
         private System.Windows.Forms.Label lMapFileOptions;
         private System.Windows.Forms.GroupBox gTrees;
         private System.Windows.Forms.Label lTreeHeightUnits;
@@ -1696,5 +1707,6 @@
         private System.Windows.Forms.Label lUseTemplate;
         private System.Windows.Forms.Button bBrowseTemplate;
         private System.Windows.Forms.Button bSaveTemplate;
+        private CustomPictureBox customPictureBox1;
     }
 }

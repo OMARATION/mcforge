@@ -592,5 +592,11 @@ namespace MCForge.Gui
                 }
             }
         }
+
+        private void newMapToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MapEditor.AddWorldPopup popup = new MapEditor.AddWorldPopup(null);
+            popup.ShowDialog();
+        }
     }
 }

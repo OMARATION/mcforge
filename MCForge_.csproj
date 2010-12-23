@@ -86,6 +86,7 @@
   <ItemGroup>
     <Compile Include="AutoSaver.cs" />
     <Compile Include="Block.cs" />
+    <Compile Include="Commands\CmdCountDown.cs" />
     <Compile Include="Commands\CmdImpersonate.cs" />
     <Compile Include="Commands\CmdPossess.cs" />
     <Compile Include="Commands\CmdReload.cs" />
