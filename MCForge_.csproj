@@ -86,8 +86,9 @@
   <ItemGroup>
     <Compile Include="AutoSaver.cs" />
     <Compile Include="Block.cs" />
-    <Compile Include="Commands\CmdCountDown.cs" />
     <Compile Include="Commands\CmdImpersonate.cs" />
+    <Compile Include="Commands\CmdOverseer.cs" />
+    <Compile Include="Commands\CmdOZone.cs" />
     <Compile Include="Commands\CmdPossess.cs" />
     <Compile Include="Commands\CmdReload.cs" />
     <Compile Include="Commands\CmdShutdown.cs" />
@@ -119,7 +120,9 @@
     <Compile Include="Commands\CmdAward.cs" />
     <Compile Include="Commands\CmdAwards.cs" />
     <Compile Include="Commands\CmdAwardMod.cs" />
+    <Compile Include="Commands\CmdWarn.cs" />
     <Compile Include="Commands\CmdXban.cs" />
+    <Compile Include="Commands\CmdXJail.cs" />
     <Compile Include="Commands\CmdXspawn.cs" />
     <Compile Include="Commands\CmdXundo.cs" />
     <Compile Include="Commands\CmdZombies.cs" />

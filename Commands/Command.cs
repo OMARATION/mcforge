@@ -63,6 +63,15 @@ namespace MCForge
             all.Add(new CmdDeleteLvl());
             all.Add(new CmdDevs());
             all.Add(new CmdDrop());
+            /*
+            all.Add(new CmdEconomy());
+            all.Add(new CmdEconomyBuyColor());
+            all.Add(new CmdEconomyBuyMap());
+            all.Add(new CmdEconomyBuyRank());
+            all.Add(new CmdEconomyBuyTitle());
+            all.Add(new CmdEconomySetup());
+            all.Add(new CmdEconomyStats());
+            */
             all.Add(new CmdEmote());
             all.Add(new CmdFill());
             all.Add(new CmdFixGrass());
@@ -113,6 +122,8 @@ namespace MCForge
             all.Add(new CmdNewLvl());
             all.Add(new CmdOpChat());
             all.Add(new CmdOutline());
+            all.Add(new CmdOverseer());
+            all.Add(new CmdOZone());
             all.Add(new CmdPaint());
             all.Add(new CmdPaste());
             all.Add(new CmdPause());
@@ -179,12 +190,15 @@ namespace MCForge
             all.Add(new CmdView());
             all.Add(new CmdViewRanks());
             all.Add(new CmdVoice());
+            all.Add(new CmdWarn());
             all.Add(new CmdWhisper());
             if (Server.useWhitelist) { all.Add(new CmdWhitelist()); }
             all.Add(new CmdWhoip());
             all.Add(new CmdWhois());
             all.Add(new CmdWhowas());
             all.Add(new CmdWrite());
+            all.Add(new CmdXban());
+            all.Add(new CmdXJail());
             all.Add(new CmdXspawn());
             all.Add(new CmdXundo());
             all.Add(new CmdZone());
