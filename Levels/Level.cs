@@ -310,6 +310,16 @@ namespace MCForge
             if (h >= height) { return Block.Zero; }
             return blocks[FCPosToInt(x, y, h)];
         }
+
+        public byte GetTile(Vector3i vec)
+        {
+            if ((((vec.x < this.width) && (vec.z < this.depth)) && ((vec.y < this.height) && (vec.x >= 0))) && ((vec.z >= 0) && (vec.y >= 0)))
+            {
+                return this.blocks[this.FCPosToInt(vec.x, vec.z, vec.y)];
+            }
+            return 0;
+        }
+
         public void SetTile(ushort x, ushort y, ushort z, byte type)
         {
             blocks[x + width * z + width * height * y] = type;
@@ -322,6 +332,16 @@ namespace MCForge
             int index = FCPosToInt(x, y, h);
             blocks[index] = type;
         }
+
+        public void SetTile(Vector3i vec, byte type)
+        {
+            if ((((vec.x < this.width) && (vec.z < this.depth)) && ((vec.y < this.height) && (vec.x >= 0))) && (((vec.z >= 0) && (vec.y >= 0)) && (type < 50)))
+            {
+                this.blocks[this.FCPosToInt(vec.x, vec.z, vec.y)] = type;
+            }
+        }
+
+
 
         public static Level Find(string levelName)
         {
@@ -1037,6 +1057,39 @@ namespace MCForge
         {
             return pos + x + z * width + y * width * height;
         }
+
+        public bool InBounds(Vector3i vec)
+        {
+            return (((((vec.x < this.width) && (vec.z < this.depth)) && ((vec.y < this.height) && (vec.x >= 0))) && (vec.z >= 0)) && (vec.y >= 0));
+        }
+
+        public bool InBounds(int x, int y, int h)
+        {
+            return (((((x < this.width) && (y < this.depth)) && ((h < this.height) && (x >= 0))) && (y >= 0)) && (h >= 0));
+        }
+
+        public int SearchColumn(int x, int y, byte blockType)
+        {
+            return this.SearchColumn(x, y, blockType, this.height - 1);
+        }
+
+        public int SearchColumn(int x, int y, byte blockType, int startH)
+        {
+            for (int i = startH; i > 0; i--)
+            {
+                if (this.GetTile(x, y, i) == id)
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+
+
+
+
+
 
         #region ==Physics==
         public struct Pos { public ushort x, z; }

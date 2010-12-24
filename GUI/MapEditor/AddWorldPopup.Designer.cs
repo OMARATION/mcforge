@@ -135,6 +135,23 @@
             this.nTreeSpacing = new System.Windows.Forms.NumericUpDown();
             this.lTreeSpacing = new System.Windows.Forms.Label();
             this.lMapFileOptions = new System.Windows.Forms.Label();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.gModules = new System.Windows.Forms.GroupBox();
+            this.xCaves = new System.Windows.Forms.CheckBox();
+            this.xBeaches = new System.Windows.Forms.CheckBox();
+            this.xSnowyMountains = new System.Windows.Forms.CheckBox();
+            this.xOreVeins = new System.Windows.Forms.CheckBox();
+            this.xRuins = new System.Windows.Forms.CheckBox();
+            this.xCliffs = new System.Windows.Forms.CheckBox();
+            this.lMaxHeightPlusMinus = new System.Windows.Forms.Label();
+            this.nMaxHeightDiff = new System.Windows.Forms.NumericUpDown();
+            this.nMaxDepthDiff = new System.Windows.Forms.NumericUpDown();
+            this.lMaxDepthPlusMinus = new System.Windows.Forms.Label();
+            this.xCustomWaterLevel = new System.Windows.Forms.CheckBox();
+            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
+            this.lCustomWaterLevelUnits = new System.Windows.Forms.Label();
+            this.xDelayBias = new System.Windows.Forms.CheckBox();
+            this.gCliffs = new System.Windows.Forms.GroupBox();
             ((System.ComponentModel.ISupportInitialize)(this.nWidthX)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nWidthY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nHeight)).BeginInit();
@@ -170,6 +187,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.nTreeHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nTreeSpacingVariation)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nTreeSpacing)).BeginInit();
+            this.panel1.SuspendLayout();
+            this.gModules.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nMaxHeightDiff)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nMaxDepthDiff)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.SuspendLayout();
             // 
             // lX2
@@ -221,7 +243,7 @@
             this.nWidthX.Size = new System.Drawing.Size(54, 20);
             this.nWidthX.TabIndex = 0;
             this.nWidthX.Value = new decimal(new int[] {
-            128,
+            256,
             0,
             0,
             0});
@@ -249,7 +271,7 @@
             this.nWidthY.Size = new System.Drawing.Size(54, 20);
             this.nWidthY.TabIndex = 1;
             this.nWidthY.Value = new decimal(new int[] {
-            128,
+            256,
             0,
             0,
             0});
@@ -277,7 +299,7 @@
             this.nHeight.Size = new System.Drawing.Size(54, 20);
             this.nHeight.TabIndex = 2;
             this.nHeight.Value = new decimal(new int[] {
-            64,
+            96,
             0,
             0,
             0});
@@ -295,7 +317,7 @@
             // xFloodBarrier
             // 
             this.xFloodBarrier.AutoSize = true;
-            this.xFloodBarrier.Location = new System.Drawing.Point(126, 6);
+            this.xFloodBarrier.Location = new System.Drawing.Point(270, 65);
             this.xFloodBarrier.Name = "xFloodBarrier";
             this.xFloodBarrier.Size = new System.Drawing.Size(84, 17);
             this.xFloodBarrier.TabIndex = 4;
@@ -592,7 +614,7 @@
             // xMarbledMode
             // 
             this.xMarbledMode.AutoSize = true;
-            this.xMarbledMode.Location = new System.Drawing.Point(292, 21);
+            this.xMarbledMode.Location = new System.Drawing.Point(282, 19);
             this.xMarbledMode.Name = "xMarbledMode";
             this.xMarbledMode.Size = new System.Drawing.Size(64, 17);
             this.xMarbledMode.TabIndex = 2;
@@ -602,7 +624,7 @@
             // xLayeredHeightmap
             // 
             this.xLayeredHeightmap.AutoSize = true;
-            this.xLayeredHeightmap.Location = new System.Drawing.Point(292, 54);
+            this.xLayeredHeightmap.Location = new System.Drawing.Point(282, 42);
             this.xLayeredHeightmap.Name = "xLayeredHeightmap";
             this.xLayeredHeightmap.Size = new System.Drawing.Size(48, 17);
             this.xLayeredHeightmap.TabIndex = 3;
@@ -672,7 +694,7 @@
             // lMaxHeightUnits
             // 
             this.lMaxHeightUnits.AutoSize = true;
-            this.lMaxHeightUnits.Location = new System.Drawing.Point(140, 54);
+            this.lMaxHeightUnits.Location = new System.Drawing.Point(227, 54);
             this.lMaxHeightUnits.Name = "lMaxHeightUnits";
             this.lMaxHeightUnits.Size = new System.Drawing.Size(38, 13);
             this.lMaxHeightUnits.TabIndex = 41;
@@ -681,7 +703,7 @@
             // lMaxDepth
             // 
             this.lMaxDepth.AutoSize = true;
-            this.lMaxDepth.Location = new System.Drawing.Point(195, 54);
+            this.lMaxDepth.Location = new System.Drawing.Point(17, 80);
             this.lMaxDepth.Name = "lMaxDepth";
             this.lMaxDepth.Size = new System.Drawing.Size(57, 13);
             this.lMaxDepth.TabIndex = 42;
@@ -690,7 +712,7 @@
             // lMaxDepthUnits
             // 
             this.lMaxDepthUnits.AutoSize = true;
-            this.lMaxDepthUnits.Location = new System.Drawing.Point(318, 54);
+            this.lMaxDepthUnits.Location = new System.Drawing.Point(227, 80);
             this.lMaxDepthUnits.Name = "lMaxDepthUnits";
             this.lMaxDepthUnits.Size = new System.Drawing.Size(38, 13);
             this.lMaxDepthUnits.TabIndex = 44;
@@ -722,11 +744,11 @@
             this.xTrees.AutoSize = true;
             this.xTrees.Checked = true;
             this.xTrees.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.xTrees.Location = new System.Drawing.Point(126, 29);
+            this.xTrees.Location = new System.Drawing.Point(15, 19);
             this.xTrees.Name = "xTrees";
-            this.xTrees.Size = new System.Drawing.Size(71, 17);
+            this.xTrees.Size = new System.Drawing.Size(53, 17);
             this.xTrees.TabIndex = 5;
-            this.xTrees.Text = "Add trees";
+            this.xTrees.Text = "Trees";
             this.xTrees.UseVisualStyleBackColor = true;
             // 
             // bSavePreview
@@ -1014,19 +1036,11 @@
             // 
             this.tabTerrain.AutoScroll = true;
             this.tabTerrain.BackColor = System.Drawing.SystemColors.Window;
-            this.tabTerrain.Controls.Add(this.gTemplates);
-            this.tabTerrain.Controls.Add(this.xWater);
             this.tabTerrain.Controls.Add(this.xSeed);
             this.tabTerrain.Controls.Add(this.nSeed);
             this.tabTerrain.Controls.Add(this.xAdvanced);
-            this.tabTerrain.Controls.Add(this.gMapSize);
-            this.tabTerrain.Controls.Add(this.gTerrainFeatures);
-            this.tabTerrain.Controls.Add(this.gHeightmapCreation);
-            this.tabTerrain.Controls.Add(this.gTrees);
             this.tabTerrain.Controls.Add(this.bGenerate);
             this.tabTerrain.Controls.Add(this.lTheme);
-            this.tabTerrain.Controls.Add(this.xTrees);
-            this.tabTerrain.Controls.Add(this.xFloodBarrier);
             this.tabTerrain.Controls.Add(this.cTheme);
             this.tabTerrain.Location = new System.Drawing.Point(4, 22);
             this.tabTerrain.Name = "tabTerrain";
@@ -1042,7 +1056,7 @@
             this.gTemplates.Controls.Add(this.lUseTemplate);
             this.gTemplates.Controls.Add(this.bBrowseTemplate);
             this.gTemplates.Controls.Add(this.bSaveTemplate);
-            this.gTemplates.Location = new System.Drawing.Point(6, 77);
+            this.gTemplates.Location = new System.Drawing.Point(3, 101);
             this.gTemplates.Name = "gTemplates";
             this.gTemplates.Size = new System.Drawing.Size(362, 52);
             this.gTemplates.TabIndex = 21;
@@ -1093,11 +1107,11 @@
             this.xWater.AutoSize = true;
             this.xWater.Checked = true;
             this.xWater.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.xWater.Location = new System.Drawing.Point(126, 52);
+            this.xWater.Location = new System.Drawing.Point(15, 42);
             this.xWater.Name = "xWater";
-            this.xWater.Size = new System.Drawing.Size(74, 17);
+            this.xWater.Size = new System.Drawing.Size(55, 17);
             this.xWater.TabIndex = 20;
-            this.xWater.Text = "Add water";
+            this.xWater.Text = "Water";
             this.xWater.UseVisualStyleBackColor = true;
             // 
             // xSeed
@@ -1142,6 +1156,13 @@
             // 
             // gMapSize
             // 
+            this.gMapSize.Controls.Add(this.lCustomWaterLevelUnits);
+            this.gMapSize.Controls.Add(this.numericUpDown1);
+            this.gMapSize.Controls.Add(this.xCustomWaterLevel);
+            this.gMapSize.Controls.Add(this.nMaxDepthDiff);
+            this.gMapSize.Controls.Add(this.lMaxDepthPlusMinus);
+            this.gMapSize.Controls.Add(this.nMaxHeightDiff);
+            this.gMapSize.Controls.Add(this.lMaxHeightPlusMinus);
             this.gMapSize.Controls.Add(this.nMaxDepth);
             this.gMapSize.Controls.Add(this.nMaxHeight);
             this.gMapSize.Controls.Add(this.nWidthX);
@@ -1154,16 +1175,16 @@
             this.gMapSize.Controls.Add(this.lX2);
             this.gMapSize.Controls.Add(this.nHeight);
             this.gMapSize.Controls.Add(this.nWidthY);
-            this.gMapSize.Location = new System.Drawing.Point(6, 135);
+            this.gMapSize.Location = new System.Drawing.Point(3, 159);
             this.gMapSize.Name = "gMapSize";
-            this.gMapSize.Size = new System.Drawing.Size(362, 81);
+            this.gMapSize.Size = new System.Drawing.Size(362, 140);
             this.gMapSize.TabIndex = 9;
             this.gMapSize.TabStop = false;
-            this.gMapSize.Text = "Map size";
+            this.gMapSize.Text = "Dimensions";
             // 
             // nMaxDepth
             // 
-            this.nMaxDepth.Location = new System.Drawing.Point(258, 52);
+            this.nMaxDepth.Location = new System.Drawing.Point(80, 78);
             this.nMaxDepth.Maximum = new decimal(new int[] {
             2032,
             0,
@@ -1206,7 +1227,7 @@
             this.gTerrainFeatures.Controls.Add(this.lBiasDisplay);
             this.gTerrainFeatures.Controls.Add(this.lBias);
             this.gTerrainFeatures.Controls.Add(this.sBias);
-            this.gTerrainFeatures.Location = new System.Drawing.Point(6, 222);
+            this.gTerrainFeatures.Location = new System.Drawing.Point(3, 305);
             this.gTerrainFeatures.Name = "gTerrainFeatures";
             this.gTerrainFeatures.Size = new System.Drawing.Size(362, 84);
             this.gTerrainFeatures.TabIndex = 10;
@@ -1294,6 +1315,7 @@
             // 
             // gHeightmapCreation
             // 
+            this.gHeightmapCreation.Controls.Add(this.xDelayBias);
             this.gHeightmapCreation.Controls.Add(this.xInvert);
             this.gHeightmapCreation.Controls.Add(this.sDetailScale);
             this.gHeightmapCreation.Controls.Add(this.lDetailSizeDisplay);
@@ -1309,7 +1331,7 @@
             this.gHeightmapCreation.Controls.Add(this.lMatchWaterCoverageDisplay);
             this.gHeightmapCreation.Controls.Add(this.lRoughness);
             this.gHeightmapCreation.Controls.Add(this.lDetailSize);
-            this.gHeightmapCreation.Location = new System.Drawing.Point(6, 312);
+            this.gHeightmapCreation.Location = new System.Drawing.Point(3, 395);
             this.gHeightmapCreation.Name = "gHeightmapCreation";
             this.gHeightmapCreation.Size = new System.Drawing.Size(362, 158);
             this.gHeightmapCreation.TabIndex = 11;
@@ -1320,7 +1342,7 @@
             // xInvert
             // 
             this.xInvert.AutoSize = true;
-            this.xInvert.Location = new System.Drawing.Point(292, 86);
+            this.xInvert.Location = new System.Drawing.Point(282, 65);
             this.xInvert.Name = "xInvert";
             this.xInvert.Size = new System.Drawing.Size(53, 17);
             this.xInvert.TabIndex = 39;
@@ -1369,7 +1391,7 @@
             this.gTrees.Controls.Add(this.lTreeSpacingVariation);
             this.gTrees.Controls.Add(this.nTreeSpacing);
             this.gTrees.Controls.Add(this.lTreeSpacing);
-            this.gTrees.Location = new System.Drawing.Point(6, 476);
+            this.gTrees.Location = new System.Drawing.Point(3, 559);
             this.gTrees.Name = "gTrees";
             this.gTrees.Size = new System.Drawing.Size(362, 74);
             this.gTrees.TabIndex = 12;
@@ -1518,11 +1540,188 @@
             this.lMapFileOptions.TabIndex = 55;
             this.lMapFileOptions.Text = "Map file:";
             // 
+            // panel1
+            // 
+            this.panel1.AutoScroll = true;
+            this.panel1.Controls.Add(this.gCliffs);
+            this.panel1.Controls.Add(this.gModules);
+            this.panel1.Controls.Add(this.gTemplates);
+            this.panel1.Controls.Add(this.gMapSize);
+            this.panel1.Controls.Add(this.gTrees);
+            this.panel1.Controls.Add(this.gHeightmapCreation);
+            this.panel1.Controls.Add(this.gTerrainFeatures);
+            this.panel1.Location = new System.Drawing.Point(549, 12);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(385, 760);
+            this.panel1.TabIndex = 56;
+            // 
+            // gModules
+            // 
+            this.gModules.Controls.Add(this.xCliffs);
+            this.gModules.Controls.Add(this.xRuins);
+            this.gModules.Controls.Add(this.xOreVeins);
+            this.gModules.Controls.Add(this.xSnowyMountains);
+            this.gModules.Controls.Add(this.xBeaches);
+            this.gModules.Controls.Add(this.xCaves);
+            this.gModules.Controls.Add(this.xWater);
+            this.gModules.Controls.Add(this.xTrees);
+            this.gModules.Controls.Add(this.xFloodBarrier);
+            this.gModules.Location = new System.Drawing.Point(3, 3);
+            this.gModules.Name = "gModules";
+            this.gModules.Size = new System.Drawing.Size(362, 92);
+            this.gModules.TabIndex = 22;
+            this.gModules.TabStop = false;
+            this.gModules.Text = "Optional Modules";
+            // 
+            // xCaves
+            // 
+            this.xCaves.AutoSize = true;
+            this.xCaves.Location = new System.Drawing.Point(15, 65);
+            this.xCaves.Name = "xCaves";
+            this.xCaves.Size = new System.Drawing.Size(56, 17);
+            this.xCaves.TabIndex = 21;
+            this.xCaves.Text = "Caves";
+            this.xCaves.UseVisualStyleBackColor = true;
+            // 
+            // xBeaches
+            // 
+            this.xBeaches.AutoSize = true;
+            this.xBeaches.Location = new System.Drawing.Point(133, 19);
+            this.xBeaches.Name = "xBeaches";
+            this.xBeaches.Size = new System.Drawing.Size(68, 17);
+            this.xBeaches.TabIndex = 22;
+            this.xBeaches.Text = "Beaches";
+            this.xBeaches.UseVisualStyleBackColor = true;
+            // 
+            // xSnowyMountains
+            // 
+            this.xSnowyMountains.AutoSize = true;
+            this.xSnowyMountains.Location = new System.Drawing.Point(133, 42);
+            this.xSnowyMountains.Name = "xSnowyMountains";
+            this.xSnowyMountains.Size = new System.Drawing.Size(109, 17);
+            this.xSnowyMountains.TabIndex = 23;
+            this.xSnowyMountains.Text = "Snowy mountains";
+            this.xSnowyMountains.UseVisualStyleBackColor = true;
+            // 
+            // xOreVeins
+            // 
+            this.xOreVeins.AutoSize = true;
+            this.xOreVeins.Location = new System.Drawing.Point(133, 65);
+            this.xOreVeins.Name = "xOreVeins";
+            this.xOreVeins.Size = new System.Drawing.Size(71, 17);
+            this.xOreVeins.TabIndex = 24;
+            this.xOreVeins.Text = "Ore veins";
+            this.xOreVeins.UseVisualStyleBackColor = true;
+            // 
+            // xRuins
+            // 
+            this.xRuins.AutoSize = true;
+            this.xRuins.Enabled = false;
+            this.xRuins.Location = new System.Drawing.Point(270, 19);
+            this.xRuins.Name = "xRuins";
+            this.xRuins.Size = new System.Drawing.Size(53, 17);
+            this.xRuins.TabIndex = 25;
+            this.xRuins.Text = "Ruins";
+            this.xRuins.UseVisualStyleBackColor = true;
+            // 
+            // xCliffs
+            // 
+            this.xCliffs.AutoSize = true;
+            this.xCliffs.Location = new System.Drawing.Point(270, 42);
+            this.xCliffs.Name = "xCliffs";
+            this.xCliffs.Size = new System.Drawing.Size(48, 17);
+            this.xCliffs.TabIndex = 26;
+            this.xCliffs.Text = "Cliffs";
+            this.xCliffs.UseVisualStyleBackColor = true;
+            // 
+            // lMaxHeightPlusMinus
+            // 
+            this.lMaxHeightPlusMinus.AutoSize = true;
+            this.lMaxHeightPlusMinus.Location = new System.Drawing.Point(140, 54);
+            this.lMaxHeightPlusMinus.Name = "lMaxHeightPlusMinus";
+            this.lMaxHeightPlusMinus.Size = new System.Drawing.Size(21, 13);
+            this.lMaxHeightPlusMinus.TabIndex = 45;
+            this.lMaxHeightPlusMinus.Text = "+/-";
+            // 
+            // nMaxHeightDiff
+            // 
+            this.nMaxHeightDiff.Location = new System.Drawing.Point(167, 52);
+            this.nMaxHeightDiff.Name = "nMaxHeightDiff";
+            this.nMaxHeightDiff.Size = new System.Drawing.Size(54, 20);
+            this.nMaxHeightDiff.TabIndex = 46;
+            // 
+            // nMaxDepthDiff
+            // 
+            this.nMaxDepthDiff.Location = new System.Drawing.Point(167, 78);
+            this.nMaxDepthDiff.Name = "nMaxDepthDiff";
+            this.nMaxDepthDiff.Size = new System.Drawing.Size(54, 20);
+            this.nMaxDepthDiff.TabIndex = 48;
+            // 
+            // lMaxDepthPlusMinus
+            // 
+            this.lMaxDepthPlusMinus.AutoSize = true;
+            this.lMaxDepthPlusMinus.Location = new System.Drawing.Point(140, 80);
+            this.lMaxDepthPlusMinus.Name = "lMaxDepthPlusMinus";
+            this.lMaxDepthPlusMinus.Size = new System.Drawing.Size(21, 13);
+            this.lMaxDepthPlusMinus.TabIndex = 47;
+            this.lMaxDepthPlusMinus.Text = "+/-";
+            // 
+            // xCustomWaterLevel
+            // 
+            this.xCustomWaterLevel.AutoSize = true;
+            this.xCustomWaterLevel.Location = new System.Drawing.Point(20, 113);
+            this.xCustomWaterLevel.Name = "xCustomWaterLevel";
+            this.xCustomWaterLevel.Size = new System.Drawing.Size(115, 17);
+            this.xCustomWaterLevel.TabIndex = 49;
+            this.xCustomWaterLevel.Text = "Custom water level";
+            this.xCustomWaterLevel.UseVisualStyleBackColor = true;
+            // 
+            // numericUpDown1
+            // 
+            this.numericUpDown1.Location = new System.Drawing.Point(141, 112);
+            this.numericUpDown1.Name = "numericUpDown1";
+            this.numericUpDown1.Size = new System.Drawing.Size(54, 20);
+            this.numericUpDown1.TabIndex = 50;
+            this.numericUpDown1.Value = new decimal(new int[] {
+            48,
+            0,
+            0,
+            0});
+            // 
+            // lCustomWaterLevelUnits
+            // 
+            this.lCustomWaterLevelUnits.AutoSize = true;
+            this.lCustomWaterLevelUnits.Location = new System.Drawing.Point(201, 114);
+            this.lCustomWaterLevelUnits.Name = "lCustomWaterLevelUnits";
+            this.lCustomWaterLevelUnits.Size = new System.Drawing.Size(38, 13);
+            this.lCustomWaterLevelUnits.TabIndex = 51;
+            this.lCustomWaterLevelUnits.Text = "blocks";
+            // 
+            // xDelayBias
+            // 
+            this.xDelayBias.AutoSize = true;
+            this.xDelayBias.Location = new System.Drawing.Point(282, 88);
+            this.xDelayBias.Name = "xDelayBias";
+            this.xDelayBias.Size = new System.Drawing.Size(75, 17);
+            this.xDelayBias.TabIndex = 40;
+            this.xDelayBias.Text = "Delay bias";
+            this.xDelayBias.UseVisualStyleBackColor = true;
+            // 
+            // gCliffs
+            // 
+            this.gCliffs.Location = new System.Drawing.Point(7, 639);
+            this.gCliffs.Name = "gCliffs";
+            this.gCliffs.Size = new System.Drawing.Size(358, 59);
+            this.gCliffs.TabIndex = 23;
+            this.gCliffs.TabStop = false;
+            this.gCliffs.Text = "Cliffs";
+            // 
             // AddWorldPopup
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1002, 714);
+            this.Controls.Add(this.panel1);
             this.Controls.Add(this.lMapFileOptions);
             this.Controls.Add(this.tabs);
             this.Controls.Add(this.bSavePreview);
@@ -1591,6 +1790,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.nTreeHeight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nTreeSpacingVariation)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nTreeSpacing)).EndInit();
+            this.panel1.ResumeLayout(false);
+            this.gModules.ResumeLayout(false);
+            this.gModules.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nMaxHeightDiff)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nMaxDepthDiff)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1708,5 +1913,22 @@
         private System.Windows.Forms.Button bBrowseTemplate;
         private System.Windows.Forms.Button bSaveTemplate;
         private CustomPictureBox customPictureBox1;
+        private System.Windows.Forms.Label lCustomWaterLevelUnits;
+        private System.Windows.Forms.NumericUpDown numericUpDown1;
+        private System.Windows.Forms.CheckBox xCustomWaterLevel;
+        private System.Windows.Forms.NumericUpDown nMaxDepthDiff;
+        private System.Windows.Forms.Label lMaxDepthPlusMinus;
+        private System.Windows.Forms.NumericUpDown nMaxHeightDiff;
+        private System.Windows.Forms.Label lMaxHeightPlusMinus;
+        private System.Windows.Forms.CheckBox xDelayBias;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.GroupBox gCliffs;
+        private System.Windows.Forms.GroupBox gModules;
+        private System.Windows.Forms.CheckBox xCliffs;
+        private System.Windows.Forms.CheckBox xRuins;
+        private System.Windows.Forms.CheckBox xOreVeins;
+        private System.Windows.Forms.CheckBox xSnowyMountains;
+        private System.Windows.Forms.CheckBox xBeaches;
+        private System.Windows.Forms.CheckBox xCaves;
     }
 }
