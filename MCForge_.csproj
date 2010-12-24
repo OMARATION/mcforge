@@ -275,9 +275,9 @@
     <Compile Include="GUI\MapEditor\CustomPictureBox.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="GUI\MapEditor\IsoCat.cs" />
-    <Compile Include="GUI\MapEditor\Noise.cs" />
+    <Compile Include="GUI\MapEditor\Forester.cs" />
     <Compile Include="GUI\MapEditor\WorldListEntry.cs" />
+    <Compile Include="Levels\MapGeneratorArgs.cs" />
     <Compile Include="Resources\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -327,6 +327,9 @@
     <Compile Include="Server.cs" />
     <Compile Include="ServerSettings.cs" />
     <Compile Include="Updater.cs" />
+    <Compile Include="Util\IsoCat.cs" />
+    <Compile Include="Util\Noise.cs" />
+    <Compile Include="Vector.cs" />
     <EmbeddedResource Include="GUI\MapEditor\AddWorldPopup.resx">
       <DependentUpon>AddWorldPopup.cs</DependentUpon>
     </EmbeddedResource>

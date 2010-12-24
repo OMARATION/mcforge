@@ -1,21 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
-using System.Threading;
-using System.IO;
 using System.Diagnostics;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
+using System.Threading;
+using System.Windows.Forms;
 using MCForge;
 
 
-namespace MCForge.Gui.MapEditor
-{
+namespace MCForge.Gui.MapEditor {
     sealed partial class AddWorldPopup : Form {
         BackgroundWorker bwLoader = new BackgroundWorker(),
                          bwGenerator = new BackgroundWorker(),
@@ -28,9 +23,10 @@ namespace MCForge.Gui.MapEditor
                 return _map;
             }
             set {
-                if( value == null ) {
-                    bOK.Enabled = false;
-                }
+                bOK.Invoke( (MethodInvoker)delegate() {
+                    bOK.Enabled = (value != null);
+                    lCreateMap.Visible = !bOK.Enabled;
+                } );
                 _map = value;
             }
         }
@@ -55,6 +51,8 @@ namespace MCForge.Gui.MapEditor
             bwLoader.RunWorkerCompleted += AsyncLoadCompleted;
 
             bwGenerator.DoWork += AsyncGen;
+            bwGenerator.WorkerReportsProgress = true;
+            bwGenerator.ProgressChanged += AsyncGenProgress;
             bwGenerator.RunWorkerCompleted += AsyncGenCompleted;
 
             bwRenderer.WorkerReportsProgress = true;
@@ -70,18 +68,30 @@ namespace MCForge.Gui.MapEditor
             // TODO: Determine if we need these
             cAccess.Items.Add( "(everyone)" );
             cBuild.Items.Add( "(everyone)" );
-
-            foreach (Group grp in Group.GroupList)
-            {
-                cAccess.Items.Add(grp.name);
-                cBuild.Items.Add(grp.name);
+            foreach( Group rank in Group.GroupList) {
+                cAccess.Items.Add( rank.name );
+                cBuild.Items.Add( rank.name );
             }
-
 
             tStatus1.Text = "";
             tStatus2.Text = "";
 
-            if( _world == null ) {
+            world = _world;
+
+            savePreviewDialog.Filter = "PNG Image|*.png|TIFF Image|*.tif;*.tiff|Bitmap Image|*.bmp|JPEG Image|*.jpg;*.jpeg";
+            savePreviewDialog.Title = "Saving preview image...";
+
+            browseTemplateDialog.Filter = "MapGenerator Template|*.ftpl";
+            browseTemplateDialog.Title = "Opening a MapGenerator template...";
+
+            saveTemplateDialog.Filter = browseTemplateDialog.Filter;
+            saveTemplateDialog.Title = "Saving a MapGenerator template...";
+
+            Shown += LoadMap;
+        }
+
+        void LoadMap( object sender, EventArgs args ) {
+            if( world == null ) {
                 Text = "Adding a New World";
                 world = new WorldListEntry();
                 int worldNameCounter = 1;
@@ -90,9 +100,10 @@ namespace MCForge.Gui.MapEditor
                 tName.Text = world.Name;
                 cAccess.SelectedIndex = 0;
                 cBuild.SelectedIndex = 0;
+                map = null;
             } else {
-                Text = "Editing World \"" + _world.Name + "\"";
-                world = new WorldListEntry( _world );
+                Text = "Editing World \"" + world.Name + "\"";
+                world = new WorldListEntry( world );
                 originalWorldName = world.Name;
                 tName.Text = world.Name;
                 cAccess.SelectedItem = world.AccessPermission;
@@ -100,17 +111,16 @@ namespace MCForge.Gui.MapEditor
                 xHidden.Checked = world.Hidden;
             }
 
-            // Fill in the "Copy existing world" combobox
-            // TODO: Make this work
+            // TODO: Fill in the "Copy existing world" combobox
             /*
             foreach( WorldListEntry otherWorld in ConfigUI.worlds ) {
-                if( otherWorld != _world ) {
+                if( otherWorld != world ) {
                     cWorld.Items.Add( otherWorld.name + " (" + otherWorld.Description + ")" );
                     copyOptionsList.Add( otherWorld );
                 }
             }
             */
-             
+
             // Disable "copy" tab if there are no other worlds
             if( cWorld.Items.Count > 0 ) {
                 cWorld.SelectedIndex = 0;
@@ -119,7 +129,7 @@ namespace MCForge.Gui.MapEditor
             }
 
             // Disable "existing map" tab if there are no other worlds
-            fileToLoad = "maps/" + world.Name + ".lvl";
+            fileToLoad = Path.Combine( "maps", world.Name + ".lvl" );
             if( File.Exists( fileToLoad ) ) {
                 ShowMapDetails( tExistingMapInfo, fileToLoad );
                 StartLoadingMap();
@@ -131,31 +141,24 @@ namespace MCForge.Gui.MapEditor
             // Set Generator comboboxes to defaults
             cTemplates.SelectedIndex = (int)MapGenTemplate.River;
 
-            savePreviewDialog.Filter = "PNG Image|*.png|TIFF Image|*.tif;*.tiff|Bitmap Image|*.bmp|JPEG Image|*.jpg;*.jpeg";
-            savePreviewDialog.Title = "Saving preview image...";
             savePreviewDialog.FileName = world.name;
-
-            browseTemplateDialog.Filter = "MapGenerator Template|*.ftpl";
-            browseTemplateDialog.Title = "Opening a MapGenerator template...";
-
-            saveTemplateDialog.Filter = browseTemplateDialog.Filter;
-            saveTemplateDialog.Title = "Saving a MapGenerator template...";
         }
 
 
         #region Loading/Saving
 
         void StartLoadingMap() {
-            bOK.Enabled = false;
+            map = null;
             tStatus1.Text = "Loading " + new FileInfo( fileToLoad ).Name;
             progressBar.Visible = true;
             progressBar.Style = ProgressBarStyle.Marquee;
             bwLoader.RunWorkerAsync();
         }
 
-        private void bBrowse_Click( object sender, EventArgs e ) {
+        private void bBrowseFile_Click( object sender, EventArgs e ) {
             fileBrowser.FileName = tFile.Text;
-            if( fileBrowser.ShowDialog() == DialogResult.OK && fileBrowser.FileName != "" ) {
+            if( fileBrowser.ShowDialog() == DialogResult.OK && !String.IsNullOrEmpty( fileBrowser.FileName ) ) {
+                tFolder.Text = "";
                 tFile.Text = fileBrowser.FileName;
                 tFile.SelectAll();
 
@@ -165,13 +168,28 @@ namespace MCForge.Gui.MapEditor
             }
         }
 
+        private void bBrowseFolder_Click( object sender, EventArgs e ) {
+            if( folderBrowser.ShowDialog() == DialogResult.OK && !String.IsNullOrEmpty(folderBrowser.SelectedPath) ) {
+                tFile.Text = "";
+                tFolder.Text = folderBrowser.SelectedPath;
+                tFolder.SelectAll();
+
+                fileToLoad = folderBrowser.SelectedPath;
+                ShowMapDetails( tLoadFileInfo, fileToLoad );
+                StartLoadingMap();
+            }
+        }
+
         string fileToLoad;
         void AsyncLoad( object sender, DoWorkEventArgs e ) {
             stopwatch = Stopwatch.StartNew();
-            map = Level.Load(fileToLoad);
-            if( map != null ) {
-                map.CalculateShadows();
+            //Level loadedMap = Level.Load( null, fileToLoad );
+            // TODO: This will probably crash
+            Level loadedMap = Level.Load(fileToLoad);
+            if( loadedMap != null ) {
+                loadedMap.CalculateShadows();
             }
+            map = loadedMap;
         }
 
         void AsyncLoadCompleted( object sender, RunWorkerCompletedEventArgs e ) {
@@ -186,7 +204,6 @@ namespace MCForge.Gui.MapEditor
             if( tab == Tabs.CopyWorld ) {
                 bShow.Enabled = true;
             }
-            bOK.Enabled = true;
         }
         #endregion Loading
 
@@ -210,6 +227,7 @@ namespace MCForge.Gui.MapEditor
         }
 
         void AsyncDraw( object sender, DoWorkEventArgs e ) {
+            stopwatch = Stopwatch.StartNew();
             renderer = new IsoCat( map, IsoCatMode.Normal, previewRotation );
             Rectangle cropRectangle = new Rectangle();
             if( bwRenderer.CancellationPending ) return;
@@ -227,11 +245,12 @@ namespace MCForge.Gui.MapEditor
         }
 
         void AsyncDrawCompleted( object sender, RunWorkerCompletedEventArgs e ) {
-            tStatus2.Text = "";
-            if( previewImage != null && previewImage != customPictureBox1.Image ) {
-                Image oldImage = customPictureBox1.Image;
+            stopwatch.Stop();
+            tStatus2.Text = String.Format( "drawn ({0:0.000}s)", stopwatch.Elapsed.TotalSeconds );
+            if( previewImage != null && previewImage != preview.Image ) {
+                Image oldImage = preview.Image;
                 if( oldImage != null ) oldImage.Dispose();
-                customPictureBox1.Image = previewImage;
+                preview.Image = previewImage;
                 bSavePreview.Enabled = true;
             }
             progressBar.Visible = false;
@@ -257,11 +276,10 @@ namespace MCForge.Gui.MapEditor
 
         #region Generation
 
-        MapGenerator generator;
         MapGeneratorArgs generatorArgs = new MapGeneratorArgs();
 
         private void bGenerate_Click( object sender, EventArgs e ) {
-            bOK.Enabled = false;
+            map = null;
             bGenerate.Enabled = false;
             bFlatgrassGenerate.Enabled = false;
 
@@ -270,12 +288,14 @@ namespace MCForge.Gui.MapEditor
                     nSeed.Value = GetRandomSeed();
                 }
 
-                SaveArgs();
+                SaveGeneratorArgs();
             }
 
             tStatus1.Text = "Generating...";
+            tStatus2.Text = "";
             progressBar.Visible = true;
-            progressBar.Style = ProgressBarStyle.Marquee;
+            progressBar.Style = ProgressBarStyle.Continuous;
+            progressBar.Value = 0;
 
             Refresh();
             bwGenerator.RunWorkerAsync();
@@ -283,21 +303,29 @@ namespace MCForge.Gui.MapEditor
 
         void AsyncGen( object sender, DoWorkEventArgs e ) {
             stopwatch = Stopwatch.StartNew();
-            map = null;
             GC.Collect( GC.MaxGeneration, GCCollectionMode.Forced );
-
+            Level generatedMap;
             if( tab == Tabs.Generator ) {
-                generator = new MapGenerator( generatorArgs );
-                map = generator.Generate();
-                generator = null;
-            } else if( tab == Tabs.Flatgrass ) {
-                map = new Level("newflatgrass", (ushort)Convert.ToInt32( nFlatgrassDimX.Value ), (ushort)Convert.ToInt32( nFlatgrassDimY.Value ), (ushort)Convert.ToInt32( nFlatgrassDimH.Value ), String.Empty);
-                MapGenerator.GenerateFlatgrass( map );
+                MapGenerator gen = new MapGenerator( generatorArgs );
+                gen.ProgressCallback = delegate( object _sender, ProgressChangedEventArgs args ) {
+                    bwGenerator.ReportProgress( args.ProgressPercentage, args.UserState );
+                };
+                generatedMap = gen.Generate();
+            } else {
+                generatedMap = new Level( "newmap", (ushort)( nFlatgrassDimX.Value ), (ushort)( nFlatgrassDimY.Value ), (ushort)( nFlatgrassDimH.Value ), String.Empty );
+                MapGenerator.GenerateFlatgrass( generatedMap );
+                generatedMap.ResetSpawn();
             }
 
-            if( floodBarrier ) map.MakeFloodBarrier();
-            map.CalculateShadows();
+            if( floodBarrier ) generatedMap.MakeFloodBarrier();
+            generatedMap.CalculateShadows();
+            map = generatedMap;
             GC.Collect( GC.MaxGeneration, GCCollectionMode.Forced );
+        }
+
+        void AsyncGenProgress( object sender, ProgressChangedEventArgs e ) {
+            progressBar.Value = e.ProgressPercentage;
+            tStatus1.Text = (string)e.UserState;
         }
 
         void AsyncGenCompleted( object sender, RunWorkerCompletedEventArgs e ) {
@@ -305,7 +333,6 @@ namespace MCForge.Gui.MapEditor
             if( map == null ) {
                 tStatus1.Text = "Generation failed!";
             } else {
-                bOK.Enabled = true;
                 tStatus1.Text = "Generation successful (" + stopwatch.Elapsed.TotalSeconds.ToString( "0.000" ) + "s)";
                 tStatus2.Text = ", drawing...";
                 Redraw( true );
@@ -331,7 +358,14 @@ namespace MCForge.Gui.MapEditor
         }
 
         private void tName_Validating( object sender, CancelEventArgs e ) {
-            e.Cancel = !Player.ValidName( tName.Text );
+            if( Player.ValidName( tName.Text ) &&
+                (!Server.LevelExists( tName.Text ) ||
+                (originalWorldName != null && tName.Text.ToLower() == originalWorldName.ToLower())) ) {
+                tName.ForeColor = SystemColors.ControlText;
+            } else {
+                tName.ForeColor = System.Drawing.Color.Red;
+                e.Cancel = true;
+            }
         }
 
         private void tName_Validated( object sender, EventArgs e ) {
@@ -345,15 +379,15 @@ namespace MCForge.Gui.MapEditor
         private void cBuild_SelectedIndexChanged( object sender, EventArgs e ) {
             world.BuildPermission = cBuild.SelectedItem.ToString();
         }
-
+        
         private void xHidden_CheckedChanged( object sender, EventArgs e ) {
             world.Hidden = xHidden.Checked;
         }
 
         private void bShow_Click( object sender, EventArgs e ) {
-            if( cWorld.SelectedIndex != -1 && File.Exists( "maps/" + copyOptionsList[cWorld.SelectedIndex].name + ".lvl" ) ) {
+            if( cWorld.SelectedIndex != -1 && File.Exists( Path.Combine( "maps", copyOptionsList[cWorld.SelectedIndex].name + ".lvl" ) ) ) {
                 bShow.Enabled = false;
-                fileToLoad = "maps/" + copyOptionsList[cWorld.SelectedIndex].name + ".lvl";
+                fileToLoad = Path.Combine( "maps", copyOptionsList[cWorld.SelectedIndex].name + ".lvl" );
                 ShowMapDetails( tCopyInfo, fileToLoad );
                 StartLoadingMap();
             }
@@ -361,7 +395,7 @@ namespace MCForge.Gui.MapEditor
 
         private void cWorld_SelectedIndexChanged( object sender, EventArgs e ) {
             if( cWorld.SelectedIndex != -1 ) {
-                string fileName = "maps/" + copyOptionsList[cWorld.SelectedIndex].name + ".lvl";
+                string fileName = Path.Combine( "maps", copyOptionsList[cWorld.SelectedIndex].name + ".lvl" );
                 bShow.Enabled = File.Exists( fileName );
                 ShowMapDetails( tCopyInfo, fileName );
             }
@@ -370,10 +404,14 @@ namespace MCForge.Gui.MapEditor
         private void xAdvanced_CheckedChanged( object sender, EventArgs e ) {
             gTerrainFeatures.Visible = xAdvanced.Checked;
             gHeightmapCreation.Visible = xAdvanced.Checked;
-            gTrees.Visible = xAdvanced.Checked;
+            gTrees.Visible = xAdvanced.Checked && xAddTrees.Checked;
+            gCaves.Visible = xCaves.Checked && xAdvanced.Checked;
+            gSnow.Visible = xAdvanced.Checked && xAddSnow.Checked;
+            gCliffs.Visible = xAdvanced.Checked && xAddCliffs.Checked;
+            gBeaches.Visible = xAdvanced.Checked && xAddBeaches.Checked;
         }
 
-        private void nWidthX_ValueChanged( object sender, EventArgs e ) {
+        private void MapDimensionChanged( object sender, EventArgs e ) {
             sFeatureScale.Maximum = (int)Math.Log( (double)Math.Max( nWidthX.Value, nWidthY.Value ), 2 );
             int value = sDetailScale.Maximum - sDetailScale.Value;
             sDetailScale.Maximum = sFeatureScale.Maximum;
@@ -416,6 +454,7 @@ namespace MCForge.Gui.MapEditor
             nRaisedCorners.Enabled = useBias;
             nLoweredCorners.Enabled = useBias;
             cMidpoint.Enabled = useBias;
+            xDelayBias.Enabled = useBias;
         }
 
         private void sRoughness_ValueChanged( object sender, EventArgs e ) {
@@ -453,12 +492,12 @@ namespace MCForge.Gui.MapEditor
 
             switch( tab ) {
                 case Tabs.ExistingMap:
-                    fileToLoad = "maps/" + world.Name + ".lvl";
+                    fileToLoad = Path.Combine( "maps", world.Name + ".lvl" );
                     ShowMapDetails( tExistingMapInfo, fileToLoad );
                     StartLoadingMap();
                     return;
                 case Tabs.LoadFile:
-                    if( tFile.Text != "" ) {
+                    if( !String.IsNullOrEmpty(tFile.Text) ) {
                         tFile.SelectAll();
                         fileToLoad = tFile.Text;
                         ShowMapDetails( tLoadFileInfo, fileToLoad );
@@ -467,7 +506,7 @@ namespace MCForge.Gui.MapEditor
                     return;
                 case Tabs.CopyWorld:
                     if( cWorld.SelectedIndex != -1 ) {
-                        bShow.Enabled = File.Exists( "maps/" + copyOptionsList[cWorld.SelectedIndex].name + ".lvl" );
+                        bShow.Enabled = File.Exists( Path.Combine( "maps", copyOptionsList[cWorld.SelectedIndex].name + ".lvl" ) );
                     }
                     return;
                 case Tabs.Flatgrass:
@@ -490,80 +529,102 @@ namespace MCForge.Gui.MapEditor
         #endregion
 
 
-        void ShowMapDetails( TextBox textBox, string fileName ) {
+        static void ShowMapDetails( TextBox textBox, string fileName ) {
+            // TODO: Make this work
+            /*
+            Mcc.MapFormat format = Mcc.MapFormat.Unknown;
+            try {
+                if( File.Exists( fileName ) ) {
+                    using( Stream stream = File.OpenRead( fileName ) ) {
+                        format = Mcc.MapUtility.Identify( stream, fileName );
+                    }
+                } else {
+                    format = Mcc.MapUtility.Identify( null, fileName );
+                }
+            } catch( Exception ) { }
+
             if( File.Exists( fileName ) ) {
-                map = Level.LoadHeaderOnly( fileName );
-                if( map != null ) {
-                    FileInfo existingMapFileInfo = new FileInfo( fileName );
+                Level loadedMap = Level.LoadHeaderOnly( fileName );
+                FileInfo existingMapFileInfo = new FileInfo( fileName );
+
+
+                if( loadedMap != null ) {
                     textBox.Text = String.Format(
 @"      File: {0}
-  Filesize: {1} KB
-   Created: {2}
-  Modified: {3}
-Dimensions: {4}×{5}×{6}
-    Blocks: {7}",
+    Format: {1}
+  Filesize: {2} KB
+   Created: {3}
+  Modified: {4}
+Dimensions: {5}×{6}×{7}
+    Blocks: {8}",
                     fileName,
+                    format,
                     (existingMapFileInfo.Length / 1024),
                     existingMapFileInfo.CreationTime.ToLongDateString(),
                     existingMapFileInfo.LastWriteTime.ToLongDateString(),
-                    map.width,
-                    map.depth,
-                    map.height,
-                    map.width * map.depth * map.height );
+                    loadedMap.width,
+                    loadedMap.depth,
+                    loadedMap.height,
+                    loadedMap.width * loadedMap.depth * loadedMap.height );
                 } else {
-                    textBox.Text = "An error occured while trying to load \"" + fileName + "\".";
+                    textBox.Text = String.Format(
+@"      File: {0}
+    Format: {1}
+  Filesize: {2} KB
+   Created: {3}
+  Modified: {4}",
+                    fileName,
+                    format,
+                    (existingMapFileInfo.Length / 1024),
+                    existingMapFileInfo.CreationTime.ToLongDateString(),
+                    existingMapFileInfo.LastWriteTime.ToLongDateString() );
                 }
+            } else if( Directory.Exists( fileName ) ) {
+                DirectoryInfo dirInfo = new DirectoryInfo( fileName );
+                long totalSize = 0;
+                foreach( FileInfo finfo in dirInfo.GetFiles() ) {
+                    totalSize += finfo.Length;
+                }
+                textBox.Text = String.Format(
+@"    Folder: {0}
+    Format: {1}
+  Filesize: {2} KB
+   Created: {3}
+  Modified: {4}",
+                    dirInfo.Name,
+                    format,
+                    (totalSize / 1024),
+                    dirInfo.CreationTime.ToLongDateString(),
+                    dirInfo.LastWriteTime.ToLongDateString() );
             } else {
                 textBox.Text = "File \"" + fileName + "\" does not exist.";
             }
+            */
         }
 
 
         private void AddWorldPopup_FormClosing( object sender, FormClosingEventArgs e ) {
             Redraw( false );
-            if (DialogResult == DialogResult.Cancel)
-            {
-                map = null;
-                return;
-            }
-
             if( DialogResult == DialogResult.OK ) {
                 if( map == null ) {
                     e.Cancel = true;
                 } else {
                     bwRenderer.CancelAsync();
-
-                    // Try changing the map name to whatever the input box says
-                    if (Player.ValidName(tName.Text))
-                    {
-                        map.name = tName.Text;
-                    }
-                    else
-                    {
-                        e.Cancel = true;
-                        MessageBox.Show("Invalid map name. Please change the name and try again.", "Error saving map", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        tName.Focus();
-                        return;
-                    }
-
                     Enabled = false;
                     progressBar.Visible = true;
                     progressBar.Style = ProgressBarStyle.Marquee;
                     tStatus1.Text = "Saving map...";
                     tStatus2.Text = "";
                     Refresh();
-
-                    
-
+                    //map.Save( Path.Combine( "maps", world.Name + ".lvl" ) );
                     // TODO: Figure out why this kludge is required in the first place
                     ushort tempdepth = map.depth;
                     ushort tempheight = map.height;
                     map.depth = tempheight;
                     map.height = tempdepth;
                     // END KLUDGE
-
                     map.Save();
-                    string oldFile = "maps/" + originalWorldName + ".lvl";
+                    string oldFile = Path.Combine( "maps", originalWorldName + ".lvl" );
                     if( originalWorldName != null && originalWorldName != world.Name && File.Exists( oldFile ) ) {
                         try {
                             File.Delete( oldFile );
@@ -578,9 +639,9 @@ Dimensions: {4}×{5}×{6}
 
         SaveFileDialog savePreviewDialog = new SaveFileDialog();
         private void bSavePreview_Click( object sender, EventArgs e ) {
-            try{
-                using(Image img = (Image)customPictureBox1.Image.Clone()){
-                    if( savePreviewDialog.ShowDialog() == DialogResult.OK && savePreviewDialog.FileName != ""){
+            try {
+                using( Image img = (Image)preview.Image.Clone() ) {
+                    if( savePreviewDialog.ShowDialog() == DialogResult.OK && !String.IsNullOrEmpty(savePreviewDialog.FileName) ) {
                         switch( savePreviewDialog.FilterIndex ) {
                             case 1:
                                 img.Save( savePreviewDialog.FileName, ImageFormat.Png ); break;
@@ -593,18 +654,18 @@ Dimensions: {4}×{5}×{6}
                         }
                     }
                 }
-            }catch(Exception ex){
-                MessageBox.Show("Could not prepare image for saving: "+ex);
+            } catch( Exception ex ) {
+                MessageBox.Show( "Could not prepare image for saving: " + ex );
             }
         }
 
 
         OpenFileDialog browseTemplateDialog = new OpenFileDialog();
         private void bBrowseTemplate_Click( object sender, EventArgs e ) {
-            if( browseTemplateDialog.ShowDialog() == DialogResult.OK && browseTemplateDialog.FileName != "" ) {
+            if( browseTemplateDialog.ShowDialog() == DialogResult.OK && !String.IsNullOrEmpty(browseTemplateDialog.FileName) ) {
                 try {
                     generatorArgs = new MapGeneratorArgs( browseTemplateDialog.FileName );
-                    LoadArgs();
+                    LoadGeneratorArgs();
                     bGenerate.PerformClick();
                 } catch( Exception ex ) {
                     MessageBox.Show( "Could not open template file: " + ex );
@@ -612,7 +673,7 @@ Dimensions: {4}×{5}×{6}
             }
         }
 
-        void LoadArgs() {
+        void LoadGeneratorArgs() {
             nHeight.Value = generatorArgs.dimH;
             nWidthX.Value = generatorArgs.dimX;
             nWidthY.Value = generatorArgs.dimY;
@@ -620,16 +681,26 @@ Dimensions: {4}×{5}×{6}
             sDetailScale.Value = generatorArgs.detailScale;
             sFeatureScale.Value = generatorArgs.featureScale;
 
-            xLayeredHeightmap.Checked=generatorArgs.layeredHeightmap;
+            xLayeredHeightmap.Checked = generatorArgs.layeredHeightmap;
             xMarbledMode.Checked = generatorArgs.marbledHeightmap;
             xMatchWaterCoverage.Checked = generatorArgs.matchWaterCoverage;
             xInvert.Checked = generatorArgs.invertHeightmap;
 
             nMaxDepth.Value = generatorArgs.maxDepth;
             nMaxHeight.Value = generatorArgs.maxHeight;
-            xTrees.Checked = generatorArgs.addTrees;
+            xAddTrees.Checked = generatorArgs.addTrees;
             sRoughness.Value = (int)(generatorArgs.roughness * 100);
             nSeed.Value = generatorArgs.seed;
+            xWater.Checked = generatorArgs.addWater;
+
+            if( generatorArgs.useBias ) sBias.Value = (int)(generatorArgs.bias * 100);
+            else sBias.Value = 0;
+            xDelayBias.Checked = generatorArgs.delayBias;
+
+            sWaterCoverage.Value = (int)(100 * generatorArgs.waterCoverage);
+            cMidpoint.SelectedIndex = generatorArgs.midPoint + 1;
+            nRaisedCorners.Value = generatorArgs.raisedCorners;
+            nLoweredCorners.Value = generatorArgs.loweredCorners;
 
             cTheme.SelectedIndex = (int)generatorArgs.theme;
             nTreeHeight.Value = (generatorArgs.treeHeightMax + generatorArgs.treeHeightMin) / 2;
@@ -637,18 +708,38 @@ Dimensions: {4}×{5}×{6}
             nTreeSpacing.Value = (generatorArgs.treeSpacingMax + generatorArgs.treeSpacingMin) / 2;
             nTreeSpacingVariation.Value = (generatorArgs.treeSpacingMax - generatorArgs.treeSpacingMin) / 2;
 
-            if( generatorArgs.useBias ) sBias.Value = (int)(generatorArgs.bias * 100);
-            else sBias.Value = 0;
+            xCaves.Checked = generatorArgs.addCaves;
+            xCaveLava.Checked = generatorArgs.addCaveLava;
+            xCaveWater.Checked = generatorArgs.addCaveWater;
+            xOre.Checked = generatorArgs.addOre;
+            sCaveDensity.Value = (int)(generatorArgs.caveDensity * 100);
+            sCaveSize.Value = (int)(generatorArgs.caveSize * 100);
 
-            sWaterCoverage.Value = (int)(100*generatorArgs.waterCoverage);
-            cMidpoint.SelectedIndex = generatorArgs.midPoint + 1;
-            nRaisedCorners.Value = generatorArgs.raisedCorners;
-            nLoweredCorners.Value = generatorArgs.loweredCorners;
+            xWaterLevel.Checked = generatorArgs.customWaterLevel;
+            nWaterLevel.Maximum = generatorArgs.dimH;
+            nWaterLevel.Value = Math.Min( generatorArgs.waterLevel, generatorArgs.dimH );
 
-            xWater.Checked = generatorArgs.addWater;
+            xAddSnow.Checked = generatorArgs.addSnow;
+
+            nSnowAltitude.Value = generatorArgs.snowAltitude - (generatorArgs.customWaterLevel ? generatorArgs.waterLevel : generatorArgs.dimH / 2);
+            nSnowTransition.Value = generatorArgs.snowTransition;
+
+            xAddCliffs.Checked = generatorArgs.addCliffs;
+            sCliffThreshold.Value = (int)(generatorArgs.cliffThreshold * 100);
+            xCliffSmoothing.Checked = generatorArgs.cliffSmoothing;
+
+            xAddBeaches.Checked = generatorArgs.addBeaches;
+            nBeachExtent.Value = generatorArgs.beachExtent;
+            nBeachHeight.Value = generatorArgs.beachHeight;
+
+            sAboveFunc.Value = ExponentToTrackBar( sAboveFunc, generatorArgs.aboveFuncExponent );
+            sBelowFunc.Value = ExponentToTrackBar( sBelowFunc, generatorArgs.belowFuncExponent );
+
+            nMaxHeightVariation.Value = generatorArgs.maxHeightVariation;
+            nMaxDepthVariation.Value = generatorArgs.maxDepthVariation;
         }
 
-        void SaveArgs() {
+        void SaveGeneratorArgs() {
             generatorArgs = new MapGeneratorArgs {
                 detailScale = sDetailScale.Value,
                 featureScale = sFeatureScale.Value,
@@ -660,7 +751,7 @@ Dimensions: {4}×{5}×{6}
                 matchWaterCoverage = xMatchWaterCoverage.Checked,
                 maxDepth = (int)nMaxDepth.Value,
                 maxHeight = (int)nMaxHeight.Value,
-                addTrees = xTrees.Checked,
+                addTrees = xAddTrees.Checked,
                 roughness = sRoughness.Value / 100f,
                 seed = (int)nSeed.Value,
                 theme = (MapGenTheme)cTheme.SelectedIndex,
@@ -669,21 +760,43 @@ Dimensions: {4}×{5}×{6}
                 treeSpacingMax = (int)(nTreeSpacing.Value + nTreeSpacingVariation.Value),
                 treeSpacingMin = (int)(nTreeSpacing.Value - nTreeSpacingVariation.Value),
                 useBias = (sBias.Value != 0),
+                delayBias = xDelayBias.Checked,
                 waterCoverage = sWaterCoverage.Value / 100f,
                 bias = sBias.Value / 100f,
                 midPoint = cMidpoint.SelectedIndex - 1,
                 raisedCorners = (int)nRaisedCorners.Value,
                 loweredCorners = (int)nLoweredCorners.Value,
                 invertHeightmap = xInvert.Checked,
-                addWater = xWater.Checked
+                addWater = xWater.Checked,
+                addCaves = xCaves.Checked,
+                addOre = xOre.Checked,
+                addCaveLava = xCaveLava.Checked,
+                addCaveWater = xCaveWater.Checked,
+                caveDensity = sCaveDensity.Value / 100f,
+                caveSize = sCaveSize.Value / 100f,
+                customWaterLevel = xWaterLevel.Checked,
+                waterLevel = (int)(xWaterLevel.Checked ? nWaterLevel.Value : nHeight.Value / 2),
+                addSnow = xAddSnow.Checked,
+                snowTransition = (int)nSnowTransition.Value,
+                snowAltitude = (int)(nSnowAltitude.Value + (xWaterLevel.Checked ? nWaterLevel.Value : nHeight.Value / 2)),
+                addCliffs = xAddCliffs.Checked,
+                cliffThreshold = sCliffThreshold.Value / 100f,
+                cliffSmoothing = xCliffSmoothing.Checked,
+                addBeaches = xAddBeaches.Checked,
+                beachExtent = (int)nBeachExtent.Value,
+                beachHeight = (int)nBeachHeight.Value,
+                aboveFuncExponent = TrackBarToExponent( sAboveFunc ),
+                belowFuncExponent = TrackBarToExponent( sBelowFunc ),
+                maxHeightVariation = (int)nMaxHeightVariation.Value,
+                maxDepthVariation = (int)nMaxDepthVariation.Value
             };
         }
 
         SaveFileDialog saveTemplateDialog = new SaveFileDialog();
         private void bSaveTemplate_Click( object sender, EventArgs e ) {
-            if( saveTemplateDialog.ShowDialog() == DialogResult.OK && saveTemplateDialog.FileName != "" ) {
+            if( saveTemplateDialog.ShowDialog() == DialogResult.OK && !String.IsNullOrEmpty(saveTemplateDialog.FileName) ) {
                 try {
-                    SaveArgs();
+                    SaveGeneratorArgs();
                     generatorArgs.Save( saveTemplateDialog.FileName );
                 } catch( Exception ex ) {
                     MessageBox.Show( "Could not open template file: " + ex );
@@ -693,8 +806,81 @@ Dimensions: {4}×{5}×{6}
 
         private void cTemplates_SelectedIndexChanged( object sender, EventArgs e ) {
             generatorArgs = MapGenerator.MakeTemplate( (MapGenTemplate)cTemplates.SelectedIndex );
-            LoadArgs();
+            LoadGeneratorArgs();
             bGenerate.PerformClick();
+        }
+
+        private void xCaves_CheckedChanged( object sender, EventArgs e ) {
+            gCaves.Visible = xCaves.Checked && xAdvanced.Checked;
+        }
+
+        private void sCaveDensity_ValueChanged( object sender, EventArgs e ) {
+            lCaveDensityDisplay.Text = sCaveDensity.Value + "%";
+        }
+
+        private void sCaveSize_ValueChanged( object sender, EventArgs e ) {
+            lCaveSizeDisplay.Text = sCaveSize.Value + "%";
+        }
+
+        private void xWaterLevel_CheckedChanged( object sender, EventArgs e ) {
+            nWaterLevel.Enabled = xWaterLevel.Checked;
+        }
+
+        private void nHeight_ValueChanged( object sender, EventArgs e ) {
+            nWaterLevel.Value = Math.Min( nWaterLevel.Value, nHeight.Value );
+            nWaterLevel.Maximum = nHeight.Value;
+        }
+
+        private void xAddTrees_CheckedChanged( object sender, EventArgs e ) {
+            gTrees.Visible = xAddTrees.Checked;
+        }
+
+        private void xWater_CheckedChanged( object sender, EventArgs e ) {
+            xAddBeaches.Enabled = xWater.Checked;
+        }
+
+        private void sAboveFunc_ValueChanged( object sender, EventArgs e ) {
+            lAboveFuncUnits.Text = (1 / TrackBarToExponent( sAboveFunc )).ToString( "0.0%" );
+        }
+
+        private void sBelowFunc_ValueChanged( object sender, EventArgs e ) {
+            lBelowFuncUnits.Text = (1 / TrackBarToExponent( sBelowFunc )).ToString( "0.0%" );
+        }
+
+        static float TrackBarToExponent( TrackBar bar ) {
+            if( bar.Value >= bar.Maximum / 2 ) {
+                float normalized = (bar.Value - bar.Maximum / 2f) / (float)(bar.Maximum / 2f);
+                return 1 + normalized * normalized * 3;
+            } else {
+                float normalized = (bar.Value / (bar.Maximum / 2f));
+                return normalized * .75f + .25f;
+            }
+        }
+
+        static int ExponentToTrackBar( TrackBar bar, float val ) {
+            if( val >= 1 ) {
+                float normalized = (float)Math.Sqrt( (val - 1) / 3f );
+                return (int)(bar.Maximum / 2 + normalized * (bar.Maximum / 2));
+            } else {
+                float normalized = (val - .25f) / .75f;
+                return (int)(normalized * bar.Maximum / 2f);
+            }
+        }
+
+        private void sCliffThreshold_ValueChanged( object sender, EventArgs e ) {
+            lCliffThresholdUnits.Text = sCliffThreshold.Value + "%";
+        }
+
+        private void xAddSnow_CheckedChanged( object sender, EventArgs e ) {
+            gSnow.Visible = xAdvanced.Checked && xAddSnow.Checked;
+        }
+
+        private void xAddCliffs_CheckedChanged( object sender, EventArgs e ) {
+            gCliffs.Visible = xAdvanced.Checked && xAddCliffs.Checked;
+        }
+
+        private void xAddBeaches_CheckedChanged( object sender, EventArgs e ) {
+            gBeaches.Visible = xAdvanced.Checked && xAddBeaches.Checked;
         }
     }
 }
