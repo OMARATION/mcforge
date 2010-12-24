@@ -57,6 +57,7 @@
             this.tStatus2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.progressBar = new System.Windows.Forms.ToolStripProgressBar();
             this.previewLayout = new System.Windows.Forms.TableLayoutPanel();
+            this.customPictureBox1 = new MCForge.Gui.MapEditor.CustomPictureBox();
             this.lDetailSize = new System.Windows.Forms.Label();
             this.sFeatureScale = new System.Windows.Forms.TrackBar();
             this.sRoughness = new System.Windows.Forms.TrackBar();
@@ -134,12 +135,12 @@
             this.nTreeSpacing = new System.Windows.Forms.NumericUpDown();
             this.lTreeSpacing = new System.Windows.Forms.Label();
             this.lMapFileOptions = new System.Windows.Forms.Label();
-            this.customPictureBox1 = new MCForge.Gui.MapEditor.CustomPictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.nWidthX)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nWidthY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nHeight)).BeginInit();
             this.statusStrip.SuspendLayout();
             this.previewLayout.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.customPictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.sFeatureScale)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.sRoughness)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.sWaterCoverage)).BeginInit();
@@ -169,7 +170,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.nTreeHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nTreeSpacingVariation)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nTreeSpacing)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.customPictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // lX2
@@ -364,7 +364,7 @@
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.lPreview.AutoSize = true;
-            this.lPreview.Location = new System.Drawing.Point(262, 618);
+            this.lPreview.Location = new System.Drawing.Point(262, 35);
             this.lPreview.Name = "lPreview";
             this.lPreview.Size = new System.Drawing.Size(54, 28);
             this.lPreview.TabIndex = 16;
@@ -453,7 +453,7 @@
             // bPreviewPrev
             // 
             this.bPreviewPrev.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.bPreviewPrev.Location = new System.Drawing.Point(234, 621);
+            this.bPreviewPrev.Location = new System.Drawing.Point(234, 38);
             this.bPreviewPrev.Name = "bPreviewPrev";
             this.bPreviewPrev.Size = new System.Drawing.Size(22, 22);
             this.bPreviewPrev.TabIndex = 0;
@@ -464,7 +464,7 @@
             // bPreviewNext
             // 
             this.bPreviewNext.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.bPreviewNext.Location = new System.Drawing.Point(322, 621);
+            this.bPreviewNext.Location = new System.Drawing.Point(322, 38);
             this.bPreviewNext.Name = "bPreviewNext";
             this.bPreviewNext.Size = new System.Drawing.Size(22, 22);
             this.bPreviewNext.TabIndex = 1;
@@ -530,14 +530,21 @@
             this.previewLayout.Controls.Add(this.bPreviewPrev, 0, 1);
             this.previewLayout.Controls.Add(this.bPreviewNext, 2, 1);
             this.previewLayout.Controls.Add(this.lPreview, 1, 1);
-            this.previewLayout.Controls.Add(this.customPictureBox1, 0, 0);
-            this.previewLayout.Location = new System.Drawing.Point(411, 12);
+            this.previewLayout.Location = new System.Drawing.Point(411, 595);
             this.previewLayout.Name = "previewLayout";
             this.previewLayout.RowCount = 2;
             this.previewLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.previewLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 28F));
-            this.previewLayout.Size = new System.Drawing.Size(579, 646);
+            this.previewLayout.Size = new System.Drawing.Size(579, 63);
             this.previewLayout.TabIndex = 6;
+            // 
+            // customPictureBox1
+            // 
+            this.customPictureBox1.Location = new System.Drawing.Point(407, -61);
+            this.customPictureBox1.Name = "customPictureBox1";
+            this.customPictureBox1.Size = new System.Drawing.Size(583, 650);
+            this.customPictureBox1.TabIndex = 17;
+            this.customPictureBox1.TabStop = false;
             // 
             // lDetailSize
             // 
@@ -1511,14 +1518,6 @@
             this.lMapFileOptions.TabIndex = 55;
             this.lMapFileOptions.Text = "Map file:";
             // 
-            // customPictureBox1
-            // 
-            this.customPictureBox1.Location = new System.Drawing.Point(3, 3);
-            this.customPictureBox1.Name = "customPictureBox1";
-            this.customPictureBox1.Size = new System.Drawing.Size(576, 612);
-            this.customPictureBox1.TabIndex = 17;
-            this.customPictureBox1.TabStop = false;
-            // 
             // AddWorldPopup
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1527,6 +1526,7 @@
             this.Controls.Add(this.lMapFileOptions);
             this.Controls.Add(this.tabs);
             this.Controls.Add(this.bSavePreview);
+            this.Controls.Add(this.customPictureBox1);
             this.Controls.Add(this.previewLayout);
             this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.xHidden);
@@ -1550,6 +1550,7 @@
             this.statusStrip.PerformLayout();
             this.previewLayout.ResumeLayout(false);
             this.previewLayout.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.customPictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.sFeatureScale)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.sRoughness)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.sWaterCoverage)).EndInit();
@@ -1590,7 +1591,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.nTreeHeight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nTreeSpacingVariation)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nTreeSpacing)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.customPictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

@@ -297,61 +297,101 @@ namespace MCForge
         }
 
         public Level GenerateMap(Level map)
-        {        
-            args.waterLevel = (map.height - 1) / 2;
+        {
+            try
+            {
 
-            float desiredWaterLevel = .5f;
-            if (args.matchWaterCoverage)
-            {
-                desiredWaterLevel = MatchWaterCoverage(heightmap, args.waterCoverage);
-            }
-            float underWaterMultiplier = 0, aboveWaterMultiplier = 0;
+                args.waterLevel = (map.height - 1) / 2;
 
-            if (desiredWaterLevel != 0)
-            {
-                underWaterMultiplier = args.maxDepth / desiredWaterLevel;
-            }
-            if (desiredWaterLevel != 1)
-            {
-                aboveWaterMultiplier = args.maxHeight / (1 - desiredWaterLevel);
-            }
-
-            int level;
-            for (int x = heightmap.GetLength(0) - 1; x >= 0; x--)
-            {
-                for (int y = heightmap.GetLength(1) - 1; y >= 0; y--)
+                float desiredWaterLevel = .5f;
+                if (args.matchWaterCoverage)
                 {
-                    if (heightmap[x, y] < desiredWaterLevel)
+                    desiredWaterLevel = MatchWaterCoverage(heightmap, args.waterCoverage);
+                }
+                float underWaterMultiplier = 0, aboveWaterMultiplier = 0;
+
+                if (desiredWaterLevel != 0)
+                {
+                    underWaterMultiplier = args.maxDepth / desiredWaterLevel;
+                }
+                if (desiredWaterLevel != 1)
+                {
+                    aboveWaterMultiplier = args.maxHeight / (1 - desiredWaterLevel);
+                }
+
+                int level;
+                for (int x = heightmap.GetLength(0) - 1; x >= 0; x--)
+                {
+                    for (int y = heightmap.GetLength(1) - 1; y >= 0; y--)
                     {
-                        level = args.waterLevel - (int)Math.Round((1 - heightmap[x, y] / desiredWaterLevel) * args.maxDepth);
-                        if (args.addWater)
+                        if (heightmap[x, y] < desiredWaterLevel)
                         {
-                            if (args.waterLevel - level > 3)
+                            level = args.waterLevel - (int)Math.Round((1 - heightmap[x, y] / desiredWaterLevel) * args.maxDepth);
+                            // TODO: stupid bug fix
+                            if (level < 0) level = 0;
+                            if (args.addWater)
                             {
-                                map.SetTile(x, y, args.waterLevel, bDeepWaterSurface);
-                            }
-                            else
-                            {
-                                map.SetTile(x, y, args.waterLevel, bWaterSurface);
-                            }
-                            for (int i = args.waterLevel; i > level; i--)
-                            {
-                                map.SetTile(x, y, i, bWater);
-                            }
-                            for (int i = level; i >= 0; i--)
-                            {
-                                if (level - i < seaFloorThickness)
+                                if (args.waterLevel - level > 3)
                                 {
-                                    map.SetTile(x, y, i, bSeaFloor);
+                                    map.SetTile(x, y, args.waterLevel, bDeepWaterSurface);
                                 }
                                 else
                                 {
-                                    map.SetTile(x, y, i, bBedrock);
+                                    map.SetTile(x, y, args.waterLevel, bWaterSurface);
+                                }
+                                for (int i = args.waterLevel; i > level; i--)
+                                {
+                                    map.SetTile(x, y, i, bWater);
+                                }
+                                for (int i = level; i >= 0; i--)
+                                {
+                                    if (level - i < seaFloorThickness)
+                                    {
+                                        map.SetTile(x, y, i, bSeaFloor);
+                                    }
+                                    else
+                                    {
+                                        map.SetTile(x, y, i, bBedrock);
+                                    }
                                 }
                             }
+                            else
+                            {
+                                if (blendmap != null && blendmap[x, y] > .25 && blendmap[x, y] < .75)
+                                {
+                                    map.SetTile(x, y, level, bCliff);
+                                }
+                                else
+                                {
+                                    map.SetTile(x, y, level, bGroundSurface);
+                                }
+                                for (int i = level - 1; i >= 0; i--)
+                                {
+                                    if (level - i < groundThickness)
+                                    {
+                                        if (blendmap != null && blendmap[x, y] > CliffsideBlockThreshold && blendmap[x, y] < (1 - CliffsideBlockThreshold))
+                                        {
+                                            map.SetTile(x, y, i, bCliff);
+                                        }
+                                        else
+                                        {
+                                            map.SetTile(x, y, i, bGround);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        map.SetTile(x, y, i, bBedrock);
+                                    }
+                                }
+                            }
+
                         }
                         else
                         {
+                            level = args.waterLevel + (int)Math.Round((heightmap[x, y] - desiredWaterLevel) * aboveWaterMultiplier);
+                            // TODO: stupid bug fix
+                            if (level < 0) level = 0;
+
                             if (blendmap != null && blendmap[x, y] > .25 && blendmap[x, y] < .75)
                             {
                                 map.SetTile(x, y, level, bCliff);
@@ -379,49 +419,41 @@ namespace MCForge
                                 }
                             }
                         }
-
                     }
-                    else
-                    {
-                        level = args.waterLevel + (int)Math.Round((heightmap[x, y] - desiredWaterLevel) * aboveWaterMultiplier);
+                }
 
-                        if (blendmap != null && blendmap[x, y] > .25 && blendmap[x, y] < .75)
+                if (args.addTrees)
+                {
+                    GenerateTrees(map);
+                }
+
+                // TODO: Remove this test thing
+                // We will make a 5x5x5 red cube in the 0,0,0 corner
+                int cubesize = 12;
+                for (int x = 0; x < cubesize; x++)
+                {
+                    for (int y = 0; y < cubesize; y++)
+                    {
+                        for (int z = 0; z < cubesize; z++)
                         {
-                            map.SetTile(x, y, level, bCliff);
-                        }
-                        else
-                        {
-                            map.SetTile(x, y, level, bGroundSurface);
-                        }
-                        for (int i = level - 1; i >= 0; i--)
-                        {
-                            if (level - i < groundThickness)
-                            {
-                                if (blendmap != null && blendmap[x, y] > CliffsideBlockThreshold && blendmap[x, y] < (1 - CliffsideBlockThreshold))
-                                {
-                                    map.SetTile(x, y, i, bCliff);
-                                }
-                                else
-                                {
-                                    map.SetTile(x, y, i, bGround);
-                                }
-                            }
-                            else
-                            {
-                                map.SetTile(x, y, i, bBedrock);
-                            }
+                            if(x == 0)
+                                map.SetTile(x, y, z, Block.red);
+                            if (y == 0)
+                                map.SetTile(x, y, z, Block.yellow);
+                            if (z == 0)
+                                map.SetTile(x, y, z, Block.blue);
                         }
                     }
                 }
-            }
 
-            if (args.addTrees)
+                map.ResetSpawn();
+                return map;
+            }
+            catch (Exception ex)
             {
-                GenerateTrees(map);
+                Console.WriteLine(ex.Message);
+                return null;
             }
-
-            map.ResetSpawn();
-            return map;
         }
 
 
@@ -472,8 +504,8 @@ namespace MCForge
                     bWater = Block.water;
                     bGround = Block.white;
                     bSeaFloor = Block.white;
-                    bBedrock = Block.stone;
-                    bCliff = Block.stone;
+                    bBedrock = Block.rock;
+                    bCliff = Block.rock;
                     groundThickness = 1;
                     break;
                 case MapGenTheme.Desert:
@@ -483,7 +515,7 @@ namespace MCForge
                     bWater = Block.water;
                     bGround = Block.sand;
                     bSeaFloor = Block.sand;
-                    bBedrock = Block.stone;
+                    bBedrock = Block.rock;
                     bCliff = Block.gravel;
                     break;
                 case MapGenTheme.Hell:
@@ -491,9 +523,9 @@ namespace MCForge
                     bDeepWaterSurface = Block.lava;
                     bGroundSurface = Block.obsidian;
                     bWater = Block.lava;
-                    bGround = Block.stone;
+                    bGround = Block.rock;
                     bSeaFloor = Block.obsidian;
-                    bBedrock = Block.stone;
+                    bBedrock = Block.rock;
                     bCliff = Block.stone;
                     break;
                 case MapGenTheme.Forest:
@@ -503,7 +535,7 @@ namespace MCForge
                     bWater = Block.water;
                     bGround = Block.dirt;
                     bSeaFloor = Block.sand;
-                    bBedrock = Block.stone;
+                    bBedrock = Block.rock;
                     bCliff = Block.stone;
                     break;
                 case MapGenTheme.Rocky:
@@ -511,10 +543,10 @@ namespace MCForge
                     bDeepWaterSurface = Block.water;
                     bGroundSurface = Block.stone;
                     bWater = Block.water;
-                    bGround = Block.stone;
+                    bGround = Block.rock;
                     bSeaFloor = Block.stone;
-                    bBedrock = Block.stone;
-                    bCliff = Block.stone;
+                    bBedrock = Block.rock;
+                    bCliff = Block.rock;
                     break;
             }
         }

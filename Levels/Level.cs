@@ -298,19 +298,29 @@ namespace MCForge
             IntToPos(b, out x, out y, out z);
             return GetTile(x, y, z);
         }
-        public byte GetTile(int x, int y, int z)
+        public byte GetTile(int x, int y, int h)
         {
-            return this.GetTile((ushort)x, (ushort)y, (ushort)z);
+            // TODO: I am lazy
+            //return this.GetTile((ushort)x, (ushort)z, (ushort)y);
+            if (x < 0) { return Block.Zero; }
+            if (x >= width) { return Block.Zero; }
+            if (y < 0) { return Block.Zero; }
+            if (y >= depth) { return Block.Zero; }
+            if (h < 0) { return Block.Zero; }
+            if (h >= height) { return Block.Zero; }
+            return blocks[FCPosToInt(x, y, h)];
         }
         public void SetTile(ushort x, ushort y, ushort z, byte type)
         {
             blocks[x + width * z + width * height * y] = type;
             //blockchanges[x + width * z + width * height * y] = pName;
         }
-        public void SetTile(int x, int y, int z, byte type)
+        public void SetTile(int x, int y, int h, byte type)
         {
             // TODO: I am lazy
-            this.SetTile((ushort)x, (ushort)z, (ushort)y, type);
+            //this.SetTile((ushort)x, (ushort)z, (ushort)y, type);
+            int index = FCPosToInt(x, y, h);
+            blocks[index] = type;
         }
 
         public static Level Find(string levelName)
@@ -997,6 +1007,17 @@ namespace MCForge
             if (z >= height) { return -1; }
             return x + (z * width) + (y * width * height);
             //alternate method: (h * widthY + y) * widthX + x;
+        }
+        public int FCPosToInt(int x, int y, int h)
+        {
+            // This makes it sliced
+            //return (h * depth + y) * width + x;
+            // Lawl makes it sideways
+            return x + (h * width) + (y * width * height);
+
+            // we try flipping h and y, get weirdness
+            //return x + (y * width) + (h * width * height);
+            
         }
         public void IntToPos(int pos, out ushort x, out ushort y, out ushort z)
         {
