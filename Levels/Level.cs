@@ -1008,15 +1008,24 @@ namespace MCForge
             return x + (z * width) + (y * width * height);
             //alternate method: (h * widthY + y) * widthX + x;
         }
-        public int FCPosToInt(int x, int y, int h)
+        public int FCPosToInt(int x, int y, int z)
         {
+            // FCraft method makes it sliced
+            //return (h * widthY + y) * widthX + x;
+            //return (z * depth + y) * width + x;
+
             // This makes it sliced
-            //return (h * depth + y) * width + x;
+            //return (z * depth + y) * width + x;
+            
             // Lawl makes it sideways
-            return x + (h * width) + (y * width * height);
+            //return x + (z * width) + (y * width * height);
+            // Lawl, but with depth instead of height
+            //return x + (z * width) + (y * width * depth);
 
             // we try flipping h and y, get weirdness
-            //return x + (y * width) + (h * width * height);
+            //return x + (y * width) + (z * width * height);
+
+            return x + (y * width) + (z * width * depth);
             
         }
         public void IntToPos(int pos, out ushort x, out ushort y, out ushort z)

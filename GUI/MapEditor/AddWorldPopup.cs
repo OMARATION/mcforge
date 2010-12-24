@@ -521,17 +521,47 @@ Dimensions: {4}×{5}×{6}
 
         private void AddWorldPopup_FormClosing( object sender, FormClosingEventArgs e ) {
             Redraw( false );
+            if (DialogResult == DialogResult.Cancel)
+            {
+                map = null;
+                return;
+            }
+
             if( DialogResult == DialogResult.OK ) {
                 if( map == null ) {
                     e.Cancel = true;
                 } else {
                     bwRenderer.CancelAsync();
+
+                    // Try changing the map name to whatever the input box says
+                    if (Player.ValidName(tName.Text))
+                    {
+                        map.name = tName.Text;
+                    }
+                    else
+                    {
+                        e.Cancel = true;
+                        MessageBox.Show("Invalid map name. Please change the name and try again.", "Error saving map", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        tName.Focus();
+                        return;
+                    }
+
                     Enabled = false;
                     progressBar.Visible = true;
                     progressBar.Style = ProgressBarStyle.Marquee;
                     tStatus1.Text = "Saving map...";
                     tStatus2.Text = "";
                     Refresh();
+
+                    
+
+                    // TODO: Figure out why this kludge is required in the first place
+                    ushort tempdepth = map.depth;
+                    ushort tempheight = map.height;
+                    map.depth = tempheight;
+                    map.height = tempdepth;
+                    // END KLUDGE
+
                     map.Save();
                     string oldFile = "maps/" + originalWorldName + ".lvl";
                     if( originalWorldName != null && originalWorldName != world.Name && File.Exists( oldFile ) ) {

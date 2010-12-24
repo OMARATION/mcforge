@@ -428,25 +428,29 @@ namespace MCForge
                 }
 
                 // TODO: Remove this test thing
-                // We will make a 5x5x5 red cube in the 0,0,0 corner
-                int cubesize = 12;
+                // We are idenfying the axes
+                int cubesize = 15;
                 for (int x = 0; x < cubesize; x++)
                 {
                     for (int y = 0; y < cubesize; y++)
                     {
                         for (int z = 0; z < cubesize; z++)
                         {
-                            if(x == 0)
+                            // x-axis
+                            if(y == 0 && z == 0)
                                 map.SetTile(x, y, z, Block.red);
-                            if (y == 0)
+                            // y-axis
+                            if (x == 0 && z == 0)
                                 map.SetTile(x, y, z, Block.yellow);
-                            if (z == 0)
+                            // z-axis
+                            if (x == 0 && y == 0)
                                 map.SetTile(x, y, z, Block.blue);
                         }
                     }
                 }
 
                 map.ResetSpawn();
+
                 return map;
             }
             catch (Exception ex)
@@ -571,7 +575,7 @@ namespace MCForge
                     {
                         if (k < map.height / 2 - 5)
                         {
-                            map.SetTile(i, j, k, Block.stone);
+                            map.SetTile(i, j, k, Block.rock);
                         }
                         else
                         {

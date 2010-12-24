@@ -22,10 +22,10 @@ namespace MCForge
     public class Block
     {
         public const byte air = (byte)0;
-        public const byte rock = (byte)1;
+        public const byte rock = (byte)1; // regular stone
         public const byte grass = (byte)2;
         public const byte dirt = (byte)3;
-        public const byte stone = (byte)4;
+        public const byte stone = (byte)4; // cobblestone
         public const byte wood = (byte)5;
         public const byte shrub = (byte)6;
         public const byte blackrock = (byte)7;// adminium
