@@ -923,7 +923,7 @@ namespace MCForge.Gui.MapEditor
                 if (args.MAPHEIGHTLIMIT)
                 {
                     int height = newtree.height;
-                    int ybase = newtree.pos[1];
+                    int ybase = newtree.pos.z;
                     int mapheight = args.inMap.height;
                     int foliageheight;
                     if (args.SHAPE == TreeShape.Rainforest)
