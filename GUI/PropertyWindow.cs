@@ -9,6 +9,9 @@ using System.Windows.Forms;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
+using System.CodeDom.Compiler;
+using System.Reflection;
+using System.Reflection.Emit;
 
 namespace MCForge.Gui
 {
@@ -250,6 +253,10 @@ namespace MCForge.Gui
                                 chkForceCuboid.Checked = (value.ToLower() == "true") ? true : false;
                                 break;
 
+                            case "profanity-filter":
+                                chkProfanityFilter.Checked = (value.ToLower() == "true") ? true : false;
+                                break;
+
                             case "backup-time":
                                 if (Convert.ToInt32(value) > 1) txtBackup.Text = value; else txtBackup.Text = "300";
                                 break;
@@ -418,6 +425,7 @@ namespace MCForge.Gui
                     w.WriteLine("#   overload\t=\tThe higher this is, the longer the physics is allowed to lag. Default 1500");
                     w.WriteLine("#   use-whitelist\t=\tSwitch to allow use of a whitelist to override IP bans for certain players.  Default false.");
                     w.WriteLine("#   force-cuboid\t=\tRun cuboid until the limit is hit, instead of canceling the whole operation.  Default false.");
+                    w.WriteLine("#   profanity-filter\t=\tReplace certain bad words in the chat.  Default false.");
                     w.WriteLine();
                     w.WriteLine("#   Host\t=\tThe host name for the database (usually 127.0.0.1)");
                     w.WriteLine("#   SQLPort\t=\tPort number to be used for MySQL.  Unless you manually changed the port, leave this alone.  Default 3306.");
@@ -471,6 +479,7 @@ namespace MCForge.Gui
                     w.WriteLine("opchat-perm = " + ((sbyte)Group.GroupList.Find(grp => grp.name == cmbOpChat.Items[cmbOpChat.SelectedIndex].ToString()).Permission).ToString());
                     w.WriteLine("log-heartbeat = " + chkLogBeat.Checked.ToString().ToLower());
                     w.WriteLine("force-cuboid = " + chkForceCuboid.Checked.ToString().ToLower());
+                    w.WriteLine("profanity-filter = " + chkProfanityFilter.Checked.ToString().ToLower());
                     w.WriteLine("repeat-messages = " + chkRepeatMessages.Checked.ToString());
                     w.WriteLine("host-state = " + txtHost.Text.ToString());
                     w.WriteLine();
@@ -937,6 +946,99 @@ namespace MCForge.Gui
             }
 
         }
+
+        private void CrtCustCmd_Click(object sender, EventArgs e)
+        {
+			if (CustCmdtxtBox.Text != null)
+			{
+            	if (File.Exists("extra/commands/source/Cmd" + CustCmdtxtBox.Text + ".cs"))
+            	{
+                	MessageBox.Show("Sorry, That command already exists!!");
+            	}
+            	else
+            	{
+            		Command.all.Find("cmdcreate").Use(null, CustCmdtxtBox.Text);
+					MessageBox.Show("Command Created!!");
+            	}
+			}
+			else
+			{
+				MessageBox.Show("You didnt specify a name for the command!!");
+			}
+        }
+
+        private void CompileCustCmd_Click(object sender, EventArgs e)
+        {
+			if (CustCmdtxtBox.Text != null)
+			{
+                if (File.Exists("extra/commands/dll/Cmd" + CustCmdtxtBox.Text + ".dll"))
+                {
+                    MessageBox.Show("Sorry, That command already exists!!");
+                }
+                else
+                {
+                    Command.all.Find("compile").Use(null, CustCmdtxtBox.Text);
+				    MessageBox.Show("Command Compiled!!");
+                }
+			}
+			else
+			{
+				MessageBox.Show("You didnt specify a name for the command!!");
+			}
+        }
+
+        private void LoadCustCmd_Click(object sender, EventArgs e)
+        {
+            Command.all.Find("cmdload").Use(null, CustCmdtxtBox.Text);
+        }
+
+        private void LoadIntoTxtBox_Click(object sender, EventArgs e)
+        {
+			if (CustCmdtxtBox.Text != null)
+			{
+                if (!File.Exists("extra/commands/source/Cmd" + CustCmdtxtBox.Text + ".cs"))
+                {
+                    MessageBox.Show("Sorry, That command doesn't exist yet - click Create Custom Command Above to create it.");
+                }
+                else
+                {
+                    CustCmdTxtBox2.Text = null;
+                    CustCmdTxtBox2.Text = File.ReadAllText("extra/commands/source/Cmd" + CustCmdtxtBox.Text + ".cs");
+			    }  
+            }
+			else
+			{
+				MessageBox.Show("You didnt specify a name for the command to be loaded!!");
+			}
+        }
+
+        private void SaveCustCmd_Click(object sender, EventArgs e)
+        {
+			if (CustCmdtxtBox.Text != null)
+			{
+                File.WriteAllText("extra/commands/source/Cmd" + CustCmdtxtBox.Text + ".cs", null);
+                File.WriteAllText("extra/commands/source/Cmd" + CustCmdtxtBox.Text + ".cs", CustCmdTxtBox2.Text);
+                CustCmdTxtBox2.Text = null;
+                MessageBox.Show("Saved Succesfully!!");
+			}
+			else
+			{
+				MessageBox.Show("You didnt specify a name for the command to be saved as!!");
+			}
+        }
+
+        private void ClrCustCmdTxtBox_Click(object sender, EventArgs e)
+        {
+            CustCmdTxtBox2.Text = null;
+			MessageBox.Show("Text Box Cleared!!");
+        }
+
+        private void CancelCustCmdTxtBox_Click(object sender, EventArgs e)
+        {
+            CustCmdTxtBox2.Text = null;
+        }
+
+
 
     }
 

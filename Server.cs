@@ -167,6 +167,7 @@ namespace MCForge
         public static bool parseSmiley = true;
         public static bool useWhitelist = false;
         public static bool forceCuboid = false;
+        public static bool profanityFilter = false;
         public static bool repeatMessage = false;
 
         public static bool checkUpdates = true;
@@ -260,6 +261,8 @@ namespace MCForge
             {
                 File.Create("text/emotelist.txt");
             }
+
+            ProfanityFilter.Init();
 
             timeOnline = DateTime.Now;
 

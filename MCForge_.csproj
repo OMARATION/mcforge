@@ -38,6 +38,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -84,6 +85,8 @@
   <ItemGroup>
     <Compile Include="AutoSaver.cs" />
     <Compile Include="Block.cs" />
+    <Compile Include="Commands\CmdChangeLog.cs" />
+    <Compile Include="Commands\CmdEconomy.cs" />
     <Compile Include="Commands\CmdImpersonate.cs" />
     <Compile Include="Commands\CmdOverseer.cs" />
     <Compile Include="Commands\CmdPossess.cs" />
@@ -293,6 +296,9 @@
     <Compile Include="Player\Player.cs" />
     <Compile Include="Player\PlayerBot.cs" />
     <Compile Include="Player\PlayerList.cs" />
+    <Compile Include="ProfanityFilter.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Properties.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="GUI\Window.cs">

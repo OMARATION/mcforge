@@ -976,6 +976,8 @@ namespace MCForge
                 case Block.door9_air:
                 case Block.door10_air:
                 case Block.door_iron_air:
+				case Block.door_gold_air:
+                case Block.door_cobblestone_air:
                 case Block.door_dirt_air:
                 case Block.door_grass_air:
                 case Block.door_blue_air:
@@ -1390,6 +1392,11 @@ namespace MCForge
                 if (Server.chatmod && !this.voice) { this.SendMessage("Chat moderation is on, you cannot speak."); return; }
                 if (muted) { this.SendMessage("You are muted."); return; }  //Muted: Only allow commands
 
+                // Filter out bad words
+                if (Server.profanityFilter == true)
+                {
+                    text = ProfanityFilter.Parse(text);
+                }
 
                 if (text[0] == '@' || whisper)
                 {
@@ -1731,6 +1738,7 @@ namespace MCForge
             message = message.Replace("$kicked", totalKicked.ToString());
             message = message.Replace("$server", Server.name);
             message = message.Replace("$motd", Server.motd);
+            message = message.Replace("$banned", Player.GetBannedCount().ToString());
 
             message = message.Replace("$irc", Server.ircServer + " > " + Server.ircChannel);
 
@@ -2410,6 +2418,17 @@ namespace MCForge
             ms.Close();
             ms.Dispose();
             return bytes;
+        }
+        public static int GetBannedCount()
+        {
+            try
+            {
+                return File.ReadAllLines("ranks/banned.txt").Length;
+            }
+            catch (Exception ex)
+            {
+                return 0;
+            }
         }
         #endregion
         #region == Host <> Network ==
