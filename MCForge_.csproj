@@ -127,7 +127,6 @@
     <Compile Include="Commands\CmdZz.cs" />
     <Compile Include="Commands\CmdOZone.cs" />
     <Compile Include="Commands\CmdXJail.cs" />
-    <Compile Include="CTFGame.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="FindReference.cs" />
     <Compile Include="Color.cs" />
@@ -265,6 +264,11 @@
     <Compile Include="Commands\CmdTrust.cs" />
     <Compile Include="Commands\CmdText.cs" />
     <Compile Include="Commands\CmdView.cs" />
+    <Compile Include="Gaming\CTF\CTFGame.cs" />
+    <Compile Include="Gaming\CTF\CTFTeam.cs" />
+    <Compile Include="Gaming\Game.cs" />
+    <Compile Include="Gaming\IFFAGame.cs" />
+    <Compile Include="Gaming\ITeamGame.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="GUI\PropertyWindow.cs">
       <SubType>Form</SubType>
@@ -286,7 +290,7 @@
     <Compile Include="Levels\Level.cs" />
     <Compile Include="Levels\ConvertDAT.cs" />
     <Compile Include="MySQL.cs" />
-    <Compile Include="Player\Team.cs" />
+    <Compile Include="Gaming\Team.cs" />
     <Compile Include="Player\Group.cs" />
     <Compile Include="GUI\Program.cs" />
     <Compile Include="Heart.cs" />
@@ -361,6 +365,9 @@
     </Content>
     <Compile Include="Commands\CmdWarn.cs" />
     <Content Include="MCForge.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Util\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

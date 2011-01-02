@@ -105,9 +105,18 @@ namespace MCForge
         List<Check> ListCheck = new List<Check>();  //A list of blocks that need to be updated
         List<Update> ListUpdate = new List<Update>();  //A list of block to change after calculation
 
+        public Gaming.Game CurrentGame;
+        public bool GameInProgress
+        {
+            get
+            {
+                return (CurrentGame != null);
+            }
+        }
+
         //CTF STUFF
-        public CTFGame ctfgame = new CTFGame();
-        public bool ctfmode = false;
+        //public CTFGame ctfgame = new CTFGame();
+        //public bool ctfmode = false;
 
         public int lastCheck = 0;
         public int lastUpdate = 0;

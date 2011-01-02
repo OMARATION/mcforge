@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using MCForge.Gaming;
+using MCForge.Gaming.CTF;
 
 namespace MCForge
 {
@@ -157,14 +159,16 @@ namespace MCForge
                     }
                     foreach (Team t in storedT)
                     {
-                        p.level.ctfgame.RemoveTeam("&" + t.color);
+                        p.level.ctfgame.RemoveTeam("&" + t.Color);
                     }
                     p.level.ctfgame.onTeamCheck.Stop();
                     p.level.ctfgame.onTeamCheck.Dispose();
                     p.level.ctfgame.gameOn = false;
                     p.level.ctfmode = false;
-                    p.level.ctfgame = new CTFGame();
-                    p.level.ctfgame.mapOn = p.level;
+                    p.level.CurrentGame = new CTFGame()
+                    {
+                        LevelPlayingOn = p.level
+                    };
                     Player.SendMessage(p, "CTF data has been cleared.");
                 }
 
@@ -213,7 +217,7 @@ namespace MCForge
         public void AddFlag(Player p, string col, ushort x, ushort y, ushort z)
         {
             char teamCol = (char)col[1];
-            Team workTeam = p.level.ctfgame.teams.Find(team => team.color == teamCol);
+            CTFTeam workTeam = p.level.CurrentGame.Teams.Find(team => team.color == teamCol);
 
             workTeam.flagBase[0] = x;
             workTeam.flagBase[1] = y;

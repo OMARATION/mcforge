@@ -22,6 +22,8 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Security.Cryptography;
 using System.Data;
+using System.ComponentModel;
+using System.Linq;
 
 namespace MCForge
 {
@@ -35,6 +37,26 @@ namespace MCForge
         public static byte number { get { return (byte)players.Count; } }
         static System.Text.ASCIIEncoding enc = new System.Text.ASCIIEncoding();
         static MD5CryptoServiceProvider md5 = new MD5CryptoServiceProvider();
+
+        // Should return true if death (and respawn) was handled
+        public delegate void OnDeathHandler(Player player, CancelEventArgs cea);
+        public event OnDeathHandler OnDeath;
+        public bool IsPlayingGame
+        {
+            get
+            {
+                try
+                {
+                    if (!this.level.GameInProgress)
+                        return false;
+                    return this.level.CurrentGame.Teams.Any(t => t.Players.Contains(this));
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+        }
 
         public static bool storeHelp = false;
         public static string storedHelp = "";
@@ -1259,23 +1281,32 @@ namespace MCForge
                             GlobalChatLevel(this, this.color + this.prefix + this.name + Server.DefaultColor + customMessage, false);
                             break;
                     }
-                    if (team != null && this.level.ctfmode)
+
+                    CancelEventArgs cea = new CancelEventArgs();
+                    this.OnDeath(this, cea);
+                    // If death wasn't handled...
+                    if (!cea.Cancel)
                     {
-                        if (carryingFlag)
+                        if (team != null && this.level.ctfmode)
                         {
-                            level.ctfgame.DropFlag(this, hasflag);
+                            if (carryingFlag)
+                            {
+                                level.ctfgame.DropFlag(this, hasflag);
+                            }
+                            team.SpawnPlayer(this);
+                            this.health = 100;
                         }
-                        team.SpawnPlayer(this);
-                        this.health = 100;
-                    }
-                    else
-                    {
-                        Command.all.Find("spawn").Use(this, "");
-                        overallDeath++;
+                        else
+                        {
+                            Command.all.Find("spawn").Use(this, "");
+                            overallDeath++;
+                        }
+
+                        if (Server.deathcount)
+                        if (overallDeath % 10 == 0) GlobalChat(this, this.color + this.prefix + this.name + Server.DefaultColor + " has died &3" + overallDeath + " times", false);
                     }
 
-                    if (Server.deathcount)
-                        if (overallDeath % 10 == 0) GlobalChat(this, this.color + this.prefix + this.name + Server.DefaultColor + " has died &3" + overallDeath + " times", false);
+                    
                 }
                 lastDeath = DateTime.Now;
                 

@@ -76,7 +76,7 @@ namespace MCForge
         // static Thread botsThread;
 
         //CTF STUFF
-        public static List<CTFGame> CTFGames = new List<CTFGame>();
+        //public static List<CTFGame> CTFGames = new List<CTFGame>();
 
         public static PlayerList bannedIP;
         public static PlayerList whiteList;
