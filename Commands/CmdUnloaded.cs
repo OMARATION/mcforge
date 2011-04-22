@@ -29,7 +29,9 @@ namespace MCForge
 
                 DirectoryInfo di = new DirectoryInfo("levels/");
                 FileInfo[] fi = di.GetFiles("*.lvl");
-                foreach (Level l in Server.levels) { levels.Add(l.name.ToLower()); }
+                
+                    foreach (Level l in Server.levels) { levels.Add(l.name.ToLower()); }
+                
 
                 if (maxMaps == 0)
                 {

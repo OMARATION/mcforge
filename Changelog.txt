@@ -1,3 +1,41 @@
+V4.5.0.0
+-Fixed an issue with undo where it would not undo offline players. 
+-Changed the Console Message in the server for CLI so that it resembles the console message for GUI users.
+-Added a few commands:
+-/News
+-/Calculate (Made by Maxinator33)
+-/Botwait
+-/Fakepay
+
+v4.4.0.1
+-Fixed an issue where running the software would open up a small CLI window as well as the GUI. 
+-Removed /infection due to a serious bug in the command which could lead to server crashes.
+-Actually added /giftocin this time (Forgot to add it to the internal Commands list. Derp.)
+
+v4.4.0.0
+-Fixed a number of issues with permissions in commands.
+-Updated Developers List with new developers.
+-/infection: Activates Infection GameMode. 
+-/Pcinema: Play an animation.
+-/scinema: save a frame to the animation to be played by pCinema.
+-/giftocin: converts a .gif to something that can be played by pCinema.
+-/ragequit: Ragequit life!
+-/xmute: mute a player for a specified amount of time.
+-/ServerInfo: Displays Server Information.
+-/Globalcls: clears the screen for everyone.
+-/Playercls: clears the screen for the user.
+-/Ellipse: Creates an Ellipse.
+-/Review: Calls ops to review your building.
+-/Xhide: Hide without sending a message to ops.
+-/Oprules: Rules for Operators.
+-/Nick: Change your name ingame.
+-/High5: Highfive someone!
+-/FakeRank: Fake promote a player.
+-/Ohide: Hide another person.
+NOTE: Most of these new commands are Custom Commands posted on the MCLawl and MCForge forums. 
+Thanks to all the command writers who made these excellent commands! 
+Special thanks to GamezGalaxy and fredlllll
+
 v4.3.0.0
 - Fixed issue where errors caused early in server startup weren't being logged correctly and crashing the server.
 - Added a "public IDictionary<string, string> Extras" to Player and Level objects

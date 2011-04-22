@@ -32,21 +32,23 @@ namespace MCForge
             if (message.ToLower() == "empty")
             {
                 Boolean Empty = true;
-
-                foreach (Level l in Server.levels)
-                {
-                    Empty = true;
-                    Player.players.ForEach(delegate(Player pl)
+               
+                    foreach (Level l in Server.levels)
                     {
-                        if (pl.level == l) Empty = false;
-                    });
+                        Empty = true;
+                        Player.players.ForEach(delegate(Player pl)
+                        {
+                            if (pl.level == l) Empty = false;
+                        });
 
-                    if (Empty == true && l.unload)
-                    {
-                        l.Unload();
-                        return;
+                        if (Empty == true && l.unload)
+                        {
+                            l.Unload();
+                            return;
+                        }
                     }
-                }
+                
+             
                 Player.SendMessage(p, "No levels were empty.");
                 return;
             }

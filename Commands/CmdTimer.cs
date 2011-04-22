@@ -33,10 +33,10 @@ namespace MCForge
 
             if (TotalTime > 300) { Player.SendMessage(p, "Cannot have more than 5 minutes in a timer"); return; }
 
-            Player.GlobalChatLevel(p, Server.DefaultColor + "Timer lasting for " + TotalTime + " seconds has started.", false);
+            Player.SendMessage(p, Server.DefaultColor + "Timer lasting for " + TotalTime + " seconds has started.");
             TotalTime = (int)(TotalTime / 5);
 
-            Player.GlobalChatLevel(p, Server.DefaultColor + message, false);
+            Player.GlobalMessage(Server.DefaultColor + message);
 
             p.cmdTimer = true;
             messageTimer.Elapsed += delegate
@@ -49,8 +49,8 @@ namespace MCForge
                 }
                 else
                 {
-                    Player.GlobalChatLevel(p, Server.DefaultColor + message, false);
-                    Player.GlobalChatLevel(p, "Timer has " + (TotalTime * 5) + " seconds remaining.", false);
+                    Player.SendMessage(p, Server.DefaultColor + message);
+                    Player.SendMessage(p, "Timer has " + (TotalTime * 5) + " seconds remaining.");
                 }
             };
 

@@ -31,7 +31,7 @@ namespace MCForge
                 Player.SendMessage(p, "Could not find player.");
                 return;
             }
-            //     else if (who.group.Permission >= p.group.Permission) { Player.SendMessage(p, "Cannot joker someone of equal or greater rank."); return; }
+            if (who.group.Permission > p.group.Permission && p != null) { Player.SendMessage(p, "Cannot joker someone of equal or greater rank."); return; }
 
             if (!who.joker)
             {

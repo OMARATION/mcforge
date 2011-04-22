@@ -31,14 +31,16 @@ namespace MCForge
         {
             if (message.ToLower() == "all")
             {
-                foreach (Level l in Server.levels)
-                {
-                    try
+                
+                    foreach (Level l in Server.levels)
                     {
-                        l.Save();
+                        try
+                        {
+                            l.Save();
+                        }
+                        catch { }
                     }
-                    catch { }
-                }
+               
                 Player.GlobalMessage("All levels have been saved.");
             }
             else

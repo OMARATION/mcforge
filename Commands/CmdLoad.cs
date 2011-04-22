@@ -45,11 +45,12 @@ namespace MCForge
                 {
                     message = message.ToLower();
                 }
-
-                foreach (Level l in Server.levels)
-                {
-                    if (l.name == message) { Player.SendMessage(p, message + " is already loaded!"); return; }
-                }
+               
+                    foreach (Level l in Server.levels)
+                    {
+                        if (l.name == message) { Player.SendMessage(p, message + " is already loaded!"); return; }
+                    }
+               
 
                 if (Server.levels.Count == Server.levels.Capacity)
                 {
@@ -102,17 +103,18 @@ namespace MCForge
                         GC.WaitForPendingFinalizers();
                         return;
                     }
-
-                foreach (Level l in Server.levels)
-                {
-                    if (l.name == message)
+                    foreach (Level l in Server.levels)
                     {
-                        Player.SendMessage(p, message + " is already loaded!");
-                        GC.Collect();
-                        GC.WaitForPendingFinalizers();
-                        return;
+                        if (l.name == message)
+                        {
+                            Player.SendMessage(p, message + " is already loaded!");
+                            GC.Collect();
+                            GC.WaitForPendingFinalizers();
+                            return;
+                        }
                     }
-                }
+                
+               
 
                 lock (Server.levels) {
                     Server.addLevel(level);

@@ -164,7 +164,7 @@ namespace MCForge_.Gui
                 return;
             }
 
-        talk: handleComm("say " + MCForge.Group.findPerm(LevelPermission.Admin).color + "Console: &f" + s);
+        talk: handleComm("say " + Server.DefaultColor + "Console [&a" + Server.ZallState + Server.DefaultColor + "]: &f" + s);
             handleComm(Console.ReadLine());
         }
 
@@ -329,7 +329,7 @@ namespace MCForge_.Gui
                 if (!oldrevision) { filelocation = (DLLLocation); }
                 WebClient Client = new WebClient();
                 Client.DownloadFile(filelocation, "MCLawl.new");
-                Client.DownloadFile(ServerSettings.ChangelogLocation, "extra/Changelog.txt");
+                Client.DownloadFile(ServerSettings.ChangelogLocation, "changelog.txt");
                 
                 // Its possible there are no levels or players loaded yet
                 // Only save them if they exist, otherwise we fail-whale
@@ -443,7 +443,7 @@ namespace MCForge_.Gui
                     l.saveChanges();
                 }
 
-                File.WriteAllText("text/autoload.txt", level);
+                //File.WriteAllText("text/autoload.txt", level);
             }
             catch (Exception exc) { Server.ErrorLog(exc); }
         }

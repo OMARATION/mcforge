@@ -6,12 +6,12 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("MCForge")]
-[assembly: AssemblyDescription("Minecraft server software")]
+[assembly: AssemblyDescription("Minecraft Classic Custom Server Software")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("MCForge Development Team")]
 [assembly: AssemblyProduct("MCForge")]
 [assembly: AssemblyCopyright("Copyright © 2011")]
-[assembly: AssemblyTrademark("")]
+[assembly: AssemblyTrademark("Forging the Way")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
@@ -32,4 +32,4 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 
-[assembly: AssemblyVersion("4.3.0.0")]
+[assembly: AssemblyVersion("4.5.0.0")]

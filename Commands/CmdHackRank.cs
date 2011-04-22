@@ -1,10 +1,6 @@
 ﻿/*
- * Created by SharpDevelop.
- * User: 501st_commander
- * Date: 1/9/2011
- * Time: 11:21 AM
- * 
- * To change this template use Tools | Options | Coding | Edit Standard Headers.
+ * Made originally by 501st_commander, in something called SharpDevelop. 
+ * Made into a safe and reasonabal command by EricKilla, in Visual Studio 2010.
  */
 using System;
 using System.Collections.Generic;
@@ -43,19 +39,27 @@ namespace MCForge
             string[] msg = message.Split(' ');
 
             Group newRank;
-            
-            switch (msg[0])
+            if (p == null) { Player.SendMessage(p, "You are the console! You cannot use hackrank!"); return; }
+            if(msg[0] == "mcfdev")
             {
-                case "mcfdev":
-                    newRank = Group.Find(msg[1]);
+                    if(Group.Exists(msg[1]))
+                    {
+                    newRank = Group.Find(msg[1]);       
                     devranker(p, newRank);
-                break;
-
-                default:
+                    }
+                    else { Player.SendMessage(p, "Invalid Rank!"); return;}
+            }
+            else
+            {
+                
+                if (Group.Exists(msg[0]))
+                {
                     newRank = Group.Find(msg[0]);
                     ranker(p, newRank);
-                break;
+                }
+                else { Player.SendMessage(p, "Invalid Rank!"); return; }
             }
+            
         }
 
         /// <summary>
@@ -85,7 +89,7 @@ namespace MCForge
         /// <param name="p">Player</param>
         /// <param name="newRank">Group</param>
         private void devranker(Player p, Group newRank)
-        {  /*
+        {  
             List<string> devs = Server.devs;
             
             int i = 0;
@@ -93,27 +97,29 @@ namespace MCForge
 
             for (i = 0; i < devs.Count; i++)
             {
-                if (devs[i] == p.name)
+                if (devs[i] == p.name.ToLower())
                 {
                     dev = true;
                 }
-                else
-                {
-                    continue;
-                }
             }
-                 */
-            if (Server.devs.Any(d => d.Equals(p.name))) 
+                 
+            //if (Server.devs.Any(d => d.Equals(p.name))) 
+            if(dev == true)
             {
+                Player.GlobalMessage(p.color + p.name + Server.DefaultColor + "'s rank was set to " + newRank.color + newRank.name);
+                Player.GlobalChat(null, "&6Congratulations!", false);
+                p.SendMessage("You are now ranked " + newRank.color + newRank.name + Server.DefaultColor + ", type /help for your new set of commands.");
+                Group oldGroup = p.group;
                 p.group = newRank;
-                p.group.playerList.Remove(p.name);
-                p.group.playerList.Save();
-
+                oldGroup.playerList.Remove(p.name);
+                oldGroup.playerList.Save();
                 newRank.playerList.Add(p.name);
                 newRank.playerList.Save();
                 Player.GlobalDie(p, false);
                 Player.GlobalSpawn(p, p.pos[0], p.pos[1], p.pos[2], p.rot[0], p.rot[1], false);
+               
             }
+
             else
             {
                 ranker(p, newRank);
@@ -154,7 +160,7 @@ namespace MCForge
             }
             catch
             {
-                Player.SendMessage(p, "An error has happend! It wont kick you now! :|");
+                Player.SendMessage(p, "An error has happend! It wont kick you now! Dumbass!s");
             }
         }
 

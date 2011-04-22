@@ -43,6 +43,7 @@ namespace MCForge.Gui
             cmbColor.Items.AddRange(colors);
 
             string opchatperm = "";
+            string adminchatperm = "";
             foreach (Group grp in Group.GroupList)
             {
                 cmbDefaultRank.Items.Add(grp.name);
@@ -51,10 +52,18 @@ namespace MCForge.Gui
                 {
                     opchatperm = grp.name;
                 }
+                //cmbSuperOpChat.Items.Add(grp.name);
+                /*
+                
+                if (grp.Permission == Server.adminchatperm)
+                {
+                    adminchatperm = grp.name;
+                }*/
+             
             }
             cmbDefaultRank.SelectedIndex = 1;
             cmbOpChat.SelectedIndex = (opchatperm != "") ? cmbOpChat.Items.IndexOf(opchatperm) : 1;
-
+            //cmbSuperOpChat.SelectedIndex = (adminchatperm != "") ? cmbOpChat.Items.IndexOf(adminchatperm) : 1;
             //Load server stuff
             LoadProp("properties/server.properties");
             LoadRanks();
@@ -511,6 +520,7 @@ namespace MCForge.Gui
                     w.WriteLine("use-whitelist = " + Server.useWhitelist.ToString().ToLower());
                     w.WriteLine("money-name = " + txtMoneys.Text);
                     w.WriteLine("opchat-perm = " + ((sbyte)Group.GroupList.Find(grp => grp.name == cmbOpChat.Items[cmbOpChat.SelectedIndex].ToString()).Permission).ToString());
+                    //w.WriteLine("adminchat-perm = " + ((sbyte)Group.GroupList.Find(grp => grp.name == cmbSuperOpChat.Items[cmbSuperOpChat.SelectedIndex].ToString()).Permission).ToString());
                     w.WriteLine("log-heartbeat = " + chkLogBeat.Checked.ToString().ToLower());
                     w.WriteLine("force-cuboid = " + chkForceCuboid.Checked.ToString().ToLower());
                     w.WriteLine("profanity-filter = " + chkProfanityFilter.Checked.ToString().ToLower());
@@ -779,20 +789,24 @@ namespace MCForge.Gui
 
             bool foundOne = false;
             txtCmdDisallow.Text = "";
-            foreach (LevelPermission perm in allowVar.disallow)
-            {
-                foundOne = true;
-                txtCmdDisallow.Text += "," + (int)perm;
-            }
+           
+                foreach (LevelPermission perm in allowVar.disallow)
+                {
+                    foundOne = true;
+                    txtCmdDisallow.Text += "," + (int)perm;
+                }
+            
             if (foundOne) txtCmdDisallow.Text = txtCmdDisallow.Text.Remove(0, 1);
 
             foundOne = false;
             txtCmdAllow.Text = "";
-            foreach (LevelPermission perm in allowVar.allow)
-            {
-                foundOne = true;
-                txtCmdAllow.Text += "," + (int)perm;
-            }
+           
+                foreach (LevelPermission perm in allowVar.allow)
+                {
+                    foundOne = true;
+                    txtCmdAllow.Text += "," + (int)perm;
+                }
+            
             if (foundOne) txtCmdAllow.Text = txtCmdAllow.Text.Remove(0, 1);
         }
         private void txtCmdLowest_TextChanged(object sender, EventArgs e)
@@ -819,20 +833,24 @@ namespace MCForge.Gui
 
             bool foundOne = false;
             txtBlDisallow.Text = "";
-            foreach (LevelPermission perm in bs.disallow)
-            {
-                foundOne = true;
-                txtBlDisallow.Text += "," + (int)perm;
-            }
+           
+                foreach (LevelPermission perm in bs.disallow)
+                {
+                    foundOne = true;
+                    txtBlDisallow.Text += "," + (int)perm;
+                }
+            
             if (foundOne) txtBlDisallow.Text = txtBlDisallow.Text.Remove(0, 1);
 
             foundOne = false;
             txtBlAllow.Text = "";
-            foreach (LevelPermission perm in bs.allow)
-            {
-                foundOne = true;
-                txtBlAllow.Text += "," + (int)perm;
-            }
+           
+                foreach (LevelPermission perm in bs.allow)
+                {
+                    foundOne = true;
+                    txtBlAllow.Text += "," + (int)perm;
+                }
+           
             if (foundOne) txtBlAllow.Text = txtBlAllow.Text.Remove(0, 1);
         }
         private void txtBlLowest_TextChanged(object sender, EventArgs e)
@@ -872,10 +890,12 @@ namespace MCForge.Gui
                 }
 
                 txtBox.Text = "";
-                foreach (LevelPermission p in addTo)
-                {
-                    txtBox.Text += "," + (int)p;
-                }
+             
+                    foreach (LevelPermission p in addTo)
+                    {
+                        txtBox.Text += "," + (int)p;
+                    }
+             
                 if (txtBox.Text != "") txtBox.Text = txtBox.Text.Remove(0, 1);
             }
         }
@@ -1087,6 +1107,8 @@ namespace MCForge.Gui
             }
             numGuests.Maximum = numPlayers.Value;
         }
+
+       
     }
 
 }

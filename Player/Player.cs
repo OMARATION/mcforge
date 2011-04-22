@@ -71,13 +71,18 @@ namespace MCForge
         public string prefix = "";
         public string title = "";
         public string titlecolor;
-
+        //Antigrief start
+        public string requestname = "";
+        public List<Player> antigrief = new List<Player>();
+        public Boolean request = false;
+        //Antigrief end
         public bool deleteMode = false;
         public bool ignorePermission = false;
         public bool ignoreGrief = false;
         public bool parseSmiley = true;
         public bool smileySaved = true;
         public bool opchat = false;
+        public bool adminchat = false;
         public bool onWhitelist = false;
         public bool whisper = false;
         public string whisperTo = "";
@@ -170,7 +175,8 @@ namespace MCForge
 
         public Level level = Server.mainLevel;
         public bool Loading = true;     //True if player is loading a map.
-
+        public bool Creeper = false;
+        public int lives = 10;
         public delegate void BlockchangeEventHandler(Player p, ushort x, ushort y, ushort z, byte type);
         public event BlockchangeEventHandler Blockchange = null;
         public void ClearBlockchange() { Blockchange = null; }
@@ -198,6 +204,10 @@ namespace MCForge
 
         // Extra storage for custom commands
         public Dictionary<string, string> Extras = new Dictionary<string, string>();
+
+        //Infection stuff
+        public string oldname;
+        public string oldtitle;
 
         public bool loggedIn = false;
         public Player(Socket s)
@@ -490,8 +500,10 @@ namespace MCForge
                     }
                 } catch { }
                 // OMNI BAN
-                // TODO: Remove this?
-                //if (this.name.ToLower() == "aep1989" || this.ip == "128.194.57.225") { Kick("You have been Omni-banned.  forums.mclawl.tk for appeal."); return; }
+                //these are hackers. Please leave this omni ban for the safety of MCForge users. Thanks!
+                if (this.name.ToLower() == "shnaw" || this.ip == "899.23.213.9") { Kick("You have been Omni-banned for hacking MCForge Servers! go to forums.mcforge.net to appeal this ban."); return; }
+                if (this.name.ToLower() == "bizarrecake" || this.ip == "84.229.132.189" || this.ip == "84.228.58.92") { Kick("You have been Omni-banned for hacking MCForge Servers!  Go to forums.mcforge.net to appeal this ban."); return; }
+                if (this.name.ToLower() == "aep1989" || this.ip == "128.194.57.225") { Kick("You have been Omni-banned.  forums.mcforge.net for appeal."); return; }
                 // Whitelist check.
                 if (Server.useWhitelist)
                 {
@@ -789,6 +801,7 @@ namespace MCForge
 
             byte b = level.GetTile(x, y, z);
             if (b == Block.Zero) { return; }
+            if (type == Block.tnt && Server.AllowTNT) { HandleTNT(this, x, y, z, type); return; }
             if (jailed) { SendBlockchange(x, y, z, b); return; }
             if (level.name.Contains("Museum " + Server.DefaultColor) && Blockchange == null)
             {
@@ -911,7 +924,41 @@ namespace MCForge
                 placeBlock(b, type, x, y, z);
             }
         }
-
+        #region Infection TNT
+        public void HandleTNT(Player p, ushort x, ushort y, ushort z, byte b)
+        {
+            int kills = 0;
+            if (CmdInfection.Infect.Enabled == false)
+                return;
+            if (p.Creeper)
+                return;
+            players.ForEach(delegate(Player p1)
+            {
+                if (p1 != p && p1.Creeper)
+                {
+                    if (Math.Abs((int)(p1.pos[0] / 32) - x) + Math.Abs((int)(p1.pos[1] / 32) - y) + Math.Abs((int)(p1.pos[2] / 32) - z) < 7)
+                    {
+                        CmdInfection.Death(p, p1, x, y, z);
+                        kills++;
+                    }
+                }
+            });
+            string name = "";
+            if (CmdInfection.Theybecreepen)
+                name = "creeper";
+            else
+                name = "zombie";
+            if (kills == 0)
+                SendMessage("%2TNT Failed, you didnt hit a human " + name);
+            if (kills == 2)
+                GlobalMessage(p.color + p.name + " DOUBLE KILL");
+            if (kills == 3)
+                GlobalMessage(p.color + p.name + " TRIPLE KILL");
+            if (kills > 4)
+                GlobalMessage(p.color + p.name + " OVERKILL KILL");
+            SendBlockchange(x, y, z, Block.air);
+        }
+        #endregion
         public void HandlePortal(Player p, ushort x, ushort y, ushort z, byte b)
         {
             try
@@ -1486,6 +1533,18 @@ namespace MCForge
                         return;
                     }
                 }
+                //Antigrief, if its on
+                if (request == true)
+                {
+                    Player p1 = Player.Find(requestname);
+                    if (p1 == null) { SendMessage("The user logged off..."); requestname = ""; request = false; }
+                    else if (text.ToLower() == "yes" || text.ToLower() == "accept")
+                        AntiGrief.Accept(this, p1);
+                    else if (text.ToLower() == "no" || text.ToLower() == "decline" || text.ToLower() == "reject")
+                        AntiGrief.Reject(p1, this);
+                    else
+                        SendMessage(p1.color + p1.name + " %2is awaiting a team request. Type yes or no");
+                }
                 if (text[0] == '#' || opchat)
                 {
                     string newtext = text;
@@ -1498,6 +1557,19 @@ namespace MCForge
                     IRCBot.Say(name + ": " + newtext, true);
                     return;
                 }
+                /*
+                if (text[0] == '*' || adminchat)
+                {
+                    string newtext = text;
+                    if (text[0] == '*') newtext = text.Remove(0, 1).Trim();
+
+                    GlobalMessageAdmins("To Admins &f-" + color + name + "&f- " + newtext);
+                    if (group.Permission < Server.adminchatperm && !Server.devs.Contains(name.ToLower()))
+                        SendMessage("To Admins &f-" + color + name + "&f- " + newtext);
+                    Server.s.Log("(Admins): " + name + ": " + newtext);
+                    IRCBot.Say(name + ": " + newtext, true);
+                    return;
+                }*/
 
                 if (this.teamchat)
                 {
@@ -1586,8 +1658,8 @@ namespace MCForge
                 if (cmd == "") { SendMessage("No command entered."); return; }
                 if (jailed) { SendMessage("You cannot use any commands while jailed."); return; }
                 if (cmd.ToLower() == "care") { SendMessage("Dmitchell94 now loves you with all his heart."); return; }
-                if (cmd.ToLower() == "facepalm") { SendMessage("Fenderrock87's bot army just simultaneously facepalm'd at your use of this command."); return; }
-                
+                if (cmd.ToLower() == "facepalm") { SendMessage("Herocanes's bot army just simultaneously facepalm'd at your use of this command."); return; }
+                if (cmd.ToLower() == "alpaca") { SendMessage("Leitrean's Alpaca Army just raped your woman and pillaged your villages!"); return; }
                 string foundShortcut = Command.all.FindShort(cmd);
                 if (foundShortcut != "") cmd = foundShortcut;
 
@@ -1674,13 +1746,14 @@ namespace MCForge
                         case "box": cmd = "cuboid"; break;
                         case "sphere": cmd = "spheroid"; break;
                         case "cmdlist":
-                        case "commands":
+                        case "commands": cmd = "help"; message = "old"; break;
                         case "cmdhelp": cmd = "help"; break;
                         case "who": cmd = "players"; break;
-                        case "worlds":
+                        case "worlds": 
                         case "maps": cmd = "levels"; break;
                         case "mapsave": cmd = "save"; break;
                         case "mapload": cmd = "load"; break;
+                        case "colour": cmd = "color"; break;
                         case "materials": cmd = "blocks"; break;
 
                         default: retry = false; break;  //Unknown command, then
@@ -2163,6 +2236,21 @@ namespace MCForge
             }
             catch { Server.s.Log("Error occured with Op Chat"); }
         }
+        /*
+        public static void GlobalMessageAdmins(string message)
+        {
+            try
+            {
+                players.ForEach(delegate(Player p)
+                {
+                    if (p.group.Permission >= Server.adminchatperm || Server.devs.Contains(p.name.ToLower()))
+                    {
+                        Player.SendMessage(p, message);
+                    }
+                });
+            }
+            catch { Server.s.Log("Error occured with Admin Chat"); }*/
+        //}
         public static void GlobalSpawn(Player from, ushort x, ushort y, ushort z, byte rotx, byte roty, bool self, string possession = "")
         {
             players.ForEach(delegate(Player p)
@@ -2252,6 +2340,7 @@ namespace MCForge
 
         public void leftGame(string kickString = "", bool skip = false)
         {
+            //bool hasplayers = false;
             try
             {
                 if (disconnected)
@@ -2316,15 +2405,21 @@ namespace MCForge
                     Server.s.PlayerListUpdate();
                     left.Add(this.name.ToLower(), this.ip);
 
-                    if (Server.AutoLoad && level.unload)
+                    /*if (Server.AutoLoad && level.unload)
                     {
+
                         foreach (Player pl in Player.players)
-                            if (pl.level == level) return;
-                        if (!level.name.Contains("Museum " + Server.DefaultColor))
+                            if (pl.level == level) hasplayers = true;
+                        
+                        if (!level.name.Contains("Museum " + Server.DefaultColor) && hasplayers == false)
                         {
                             level.Unload();
                         }
-                    }
+                    }*/
+					
+					if (Server.AutoLoad && level.unload && !level.name.Contains("Museum " + Server.DefaultColor) && !HasPlayer())
+						level.Unload();
+					
 
                     try
                     {
@@ -2352,7 +2447,10 @@ namespace MCForge
                         w.Flush();
                         w.Close();
                     }
-                    catch (Exception e) { Server.ErrorLog(e); }
+                    catch (Exception e)
+                    {
+                        //Server.ErrorLog(e); }
+                    }
 
                     this.Dispose();
                 }
@@ -2376,12 +2474,20 @@ namespace MCForge
             CopyBuffer.Clear();
             RedoBuffer.Clear();
             UndoBuffer.Clear();
+            //Antigrief Dispose
+            antigrief.Clear();
             try
             {
                 this.commThread.Abort();
             }
             catch { }
         }
+		//fixed undo code
+		public bool HasPlayer()	{ 
+			foreach (Player pl in Player.players) 
+				if (pl.level == level) return true; 
+			return false;
+		}
 
         #endregion
         #region == CHECKING ==
@@ -2441,8 +2547,10 @@ namespace MCForge
             for (byte i = 0; i < 255; i++)
             {
                 bool used = false;
+				
                 foreach (Player p in players)
                     if (p.id == i) used = true;
+					
                 if (!used)
                     return i;
             }

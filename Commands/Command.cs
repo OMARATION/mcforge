@@ -95,6 +95,7 @@ namespace MCForge
             all.Add(new CmdImport());
             all.Add(new CmdImageprint());
             all.Add(new CmdInbox());
+            
             all.Add(new CmdInfo());
             all.Add(new CmdInvincible());
             all.Add(new CmdJail());
@@ -223,6 +224,31 @@ namespace MCForge
             all.Add(new CmdAward());
             all.Add(new CmdAwards());
             all.Add(new CmdAwardMod());
+            all.Add(new CmdpCinema());
+            all.Add(new CmdpCinema2());
+            all.Add(new CmdSCinema());
+            all.Add(new CmdNick());
+            all.Add(new Cmdglobalcls());
+            all.Add(new CmdPlayercls());
+            all.Add(new CmdServerinfo());
+            all.Add(new CmdCompLoad());
+            all.Add(new CmdFakeRank());
+            all.Add(new CmdHigh5());
+            all.Add(new CmdOHide());
+            all.Add(new CmdRagequit());
+            all.Add(new CmdXhide());
+            all.Add(new CmdEllipse());
+            all.Add(new CmdOPRules());
+            all.Add(new CmdReview());
+            all.Add(new Cmdxmute());
+            all.Add(new CmdGifToCin());
+            //all.Add(new CmdInfection()); //Will be added after comprehensive testing. 
+            all.Add(new Cmdnews());
+            all.Add(new CmdCalculate());
+            all.Add(new CmdBotwait());
+            all.Add(new CmdFakepay());
+
+
 
             core.commands = new List<Command>(all.commands);
 

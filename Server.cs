@@ -40,7 +40,7 @@ namespace MCForge
         public delegate void MessageEventHandler(string message);
         public delegate void PlayerListHandler(List<Player> playerList);
         public delegate void VoidHandler();
-
+        public static List<Player> People = new List<Player>();
         public event LogHandler OnLog;
         public event LogHandler OnSystem;
         public event LogHandler OnCommand;
@@ -49,9 +49,10 @@ namespace MCForge
         public event MessageEventHandler OnURLChange;
         public event PlayerListHandler OnPlayerListChange;
         public event VoidHandler OnSettingsUpdate;
-
+        public static Boolean AllowTNT = false;
+        public static string Time = "";
         public static Thread locationChecker;
-
+        public static Boolean IsAntiGrief = false;
         public static Thread blockThread;
         //public static List<MySql.Data.MySqlClient.MySqlCommand> mySQLCommands = new List<MySql.Data.MySqlClient.MySqlCommand>();
 
@@ -81,7 +82,7 @@ namespace MCForge
         public static PlayerList bannedIP;
         public static PlayerList whiteList;
         public static PlayerList ircControllers;
-        public static List<string> devs = new List<string>(new string[] { "dmitchell94", "jordanneil23", "sebbiultimate", "fenderrock87", "edh649", "philipdenseje", "501st_commander", "listings09"});
+        public static List<string> devs = new List<string>(new string[] { "dmitchell94", "jordanneil23", "sebbiultimate", "501st_commander", "fenderrock87", "edh649", "philipdenseje", "listings09", "hypereddie10", "shade2010", "uberfox", "erickilla", "lordpsycho"});
 
         public static List<TempBan> tempBans = new List<TempBan>();
         public struct TempBan { public string name; public DateTime allowedJoin; }
@@ -208,6 +209,7 @@ namespace MCForge
         public static string customShutdownMessage = "Server shutdown. Rejoin in 10 seconds.";
         public static string moneys = "moneys";
         public static LevelPermission opchatperm = LevelPermission.Operator;
+        public static LevelPermission adminchatperm = LevelPermission.Admin;
         public static bool logbeat = false;
 
         public static bool mono = false;
@@ -548,10 +550,24 @@ namespace MCForge
                     while (true)
                     {
                         Thread.Sleep(blockInterval * 1000);
-                        foreach (Level l in levels)
+
+                        try
                         {
-                            l.saveChanges();
+                            foreach (Level l in levels)
+                            {
+                                l.saveChanges();
+                            }
                         }
+                        catch(Exception e) 
+                        { 
+                            for(int i = 0; i < levels.Count; i++)
+                            {
+                                levels[i].saveChanges();
+                            }
+                            Server.ErrorLog(e);
+                        }
+                        
+                        
                     }
                 }));
                 blockThread.Start();

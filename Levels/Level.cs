@@ -89,7 +89,7 @@ namespace MCForge
         public bool GrassGrow = true;
         public bool worldChat = true;
         public bool fishstill = false;
-
+        public string[, ,] antigrief; //antigrief, if its on
         public int speedPhysics = 250;
         public int overload = 1500;
 
@@ -249,7 +249,8 @@ namespace MCForge
             Server.levels.Remove(this);
             GC.Collect();
             GC.WaitForPendingFinalizers();
-
+            if (Server.IsAntiGrief)
+                AntiGrief.Dispose(this);
             Player.GlobalMessageOps("&3" + name + Server.DefaultColor + " was unloaded.");
             Server.s.Log(name + " was unloaded.");
             return true;
@@ -732,7 +733,8 @@ namespace MCForge
                         level.rotx = header[10]; level.roty = header[11];
                     }
                     level.permissionbuild = (LevelPermission)11;
-
+                    if (Server.IsAntiGrief)
+                        AntiGrief.Create(level);
                     level.name = givenName;
                     level.setPhysics(phys);
 

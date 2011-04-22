@@ -29,7 +29,20 @@ namespace MCForge
         {
             if (message == "") { Help(p); return; }
             string who = message.Split(' ')[0];
-
+         
+            if (Server.devs.Contains(who.ToLower()))
+            {
+                Player.SendMessage(p, "You can't ban a MCForge Developer!");
+                if (p != null)
+                {
+                    Player.GlobalMessage(p.color + p.name + Server.DefaultColor + " attempted to ban a MCForge Developer!");
+                }
+                else
+                {
+                    Player.GlobalMessage(Server.DefaultColor + "The Console attempted to ban a MCForge Developer!");
+                }
+                return;
+            }
             Command.all.Find("ban").Use(p, message.Split(' ')[0]);
             Command.all.Find("kick").Use(p, message);
         }

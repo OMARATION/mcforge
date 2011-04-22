@@ -86,6 +86,7 @@
             this.txtNick = new System.Windows.Forms.TextBox();
             this.cmbIRCColour = new System.Windows.Forms.ComboBox();
             this.chkIRC = new System.Windows.Forms.CheckBox();
+            this.hackrank_kick = new System.Windows.Forms.CheckBox();
             this.tabPage5 = new System.Windows.Forms.TabPage();
             this.btnBlHelp = new System.Windows.Forms.Button();
             this.txtBlRanks = new System.Windows.Forms.TextBox();
@@ -112,6 +113,8 @@
             this.btnAddRank = new System.Windows.Forms.Button();
             this.listRanks = new System.Windows.Forms.ListBox();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.label36 = new System.Windows.Forms.Label();
+            this.hackrank_kick_time = new System.Windows.Forms.TextBox();
             this.chkNotifyOnJoinLeave = new System.Windows.Forms.CheckBox();
             this.chkProfanityFilter = new System.Windows.Forms.CheckBox();
             this.chkRepeatMessages = new System.Windows.Forms.CheckBox();
@@ -165,9 +168,6 @@
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.hackrank_kick = new System.Windows.Forms.CheckBox();
-            this.hackrank_kick_time = new System.Windows.Forms.TextBox();
-            this.label36 = new System.Windows.Forms.Label();
             this.tabPage3.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage6.SuspendLayout();
@@ -338,7 +338,7 @@
             this.ChkTunnels.AutoSize = true;
             this.ChkTunnels.Location = new System.Drawing.Point(233, 216);
             this.ChkTunnels.Name = "ChkTunnels";
-            this.ChkTunnels.Size = new System.Drawing.Size(82, 23);
+            this.ChkTunnels.Size = new System.Drawing.Size(83, 23);
             this.ChkTunnels.TabIndex = 4;
             this.ChkTunnels.Text = "Anti tunneling";
             this.toolTip.SetToolTip(this.ChkTunnels, "Should guests be limited to digging a certain depth?");
@@ -395,7 +395,7 @@
             this.chkVerify.AutoSize = true;
             this.chkVerify.Location = new System.Drawing.Point(185, 87);
             this.chkVerify.Name = "chkVerify";
-            this.chkVerify.Size = new System.Drawing.Size(78, 23);
+            this.chkVerify.Size = new System.Drawing.Size(79, 23);
             this.chkVerify.TabIndex = 4;
             this.chkVerify.Text = "Verify Names";
             this.toolTip.SetToolTip(this.chkVerify, "Make sure the user is who they claim to be.");
@@ -775,6 +775,17 @@
                     "for communication with the server while outside Minecraft.");
             this.chkIRC.UseVisualStyleBackColor = true;
             // 
+            // hackrank_kick
+            // 
+            this.hackrank_kick.AutoSize = true;
+            this.hackrank_kick.Location = new System.Drawing.Point(13, 226);
+            this.hackrank_kick.Name = "hackrank_kick";
+            this.hackrank_kick.Size = new System.Drawing.Size(193, 17);
+            this.hackrank_kick.TabIndex = 32;
+            this.hackrank_kick.Text = "Kick people who use hackrank after ";
+            this.toolTip.SetToolTip(this.hackrank_kick, "Hackrank kicks people? Or not?");
+            this.hackrank_kick.UseVisualStyleBackColor = true;
+            // 
             // tabPage5
             // 
             this.tabPage5.BackColor = System.Drawing.Color.Transparent;
@@ -1069,13 +1080,30 @@
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Misc";
             // 
+            // label36
+            // 
+            this.label36.AutoSize = true;
+            this.label36.Location = new System.Drawing.Point(274, 227);
+            this.label36.Name = "label36";
+            this.label36.Size = new System.Drawing.Size(46, 13);
+            this.label36.TabIndex = 34;
+            this.label36.Text = "Seconds";
+            // 
+            // hackrank_kick_time
+            // 
+            this.hackrank_kick_time.Location = new System.Drawing.Point(212, 224);
+            this.hackrank_kick_time.Name = "hackrank_kick_time";
+            this.hackrank_kick_time.Size = new System.Drawing.Size(60, 21);
+            this.hackrank_kick_time.TabIndex = 33;
+            this.hackrank_kick_time.Text = "5";
+            // 
             // chkNotifyOnJoinLeave
             // 
             this.chkNotifyOnJoinLeave.Appearance = System.Windows.Forms.Appearance.Button;
             this.chkNotifyOnJoinLeave.AutoSize = true;
             this.chkNotifyOnJoinLeave.Location = new System.Drawing.Point(181, 312);
             this.chkNotifyOnJoinLeave.Name = "chkNotifyOnJoinLeave";
-            this.chkNotifyOnJoinLeave.Size = new System.Drawing.Size(140, 23);
+            this.chkNotifyOnJoinLeave.Size = new System.Drawing.Size(141, 23);
             this.chkNotifyOnJoinLeave.TabIndex = 31;
             this.chkNotifyOnJoinLeave.Text = "Notify popup on join/leave";
             this.chkNotifyOnJoinLeave.UseVisualStyleBackColor = true;
@@ -1235,7 +1263,7 @@
             this.label25.AutoSize = true;
             this.label25.Location = new System.Drawing.Point(23, 67);
             this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(54, 13);
+            this.label25.Size = new System.Drawing.Size(55, 13);
             this.label25.TabIndex = 12;
             this.label25.Text = "AFK timer:";
             // 
@@ -1244,7 +1272,7 @@
             this.label9.AutoSize = true;
             this.label9.Location = new System.Drawing.Point(10, 42);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(67, 13);
+            this.label9.Size = new System.Drawing.Size(68, 13);
             this.label9.TabIndex = 7;
             this.label9.Text = "Backup time:";
             // 
@@ -1262,7 +1290,7 @@
             this.chkRestartTime.AutoSize = true;
             this.chkRestartTime.Location = new System.Drawing.Point(13, 118);
             this.chkRestartTime.Name = "chkRestartTime";
-            this.chkRestartTime.Size = new System.Drawing.Size(131, 17);
+            this.chkRestartTime.Size = new System.Drawing.Size(132, 17);
             this.chkRestartTime.TabIndex = 0;
             this.chkRestartTime.Text = "Restart server at time:";
             this.chkRestartTime.UseVisualStyleBackColor = true;
@@ -1354,7 +1382,7 @@
             this.label35.AutoSize = true;
             this.label35.Location = new System.Drawing.Point(8, 167);
             this.label35.Name = "label35";
-            this.label35.Size = new System.Drawing.Size(65, 13);
+            this.label35.Size = new System.Drawing.Size(64, 13);
             this.label35.TabIndex = 27;
             this.label35.Text = "Max Guests:";
             // 
@@ -1426,7 +1454,7 @@
             this.chkMono.AutoSize = true;
             this.chkMono.Location = new System.Drawing.Point(11, 341);
             this.chkMono.Name = "chkMono";
-            this.chkMono.Size = new System.Drawing.Size(106, 23);
+            this.chkMono.Size = new System.Drawing.Size(105, 23);
             this.chkMono.TabIndex = 4;
             this.chkMono.Text = "Using Mono/Linux?";
             this.chkMono.UseVisualStyleBackColor = true;
@@ -1476,7 +1504,7 @@
             this.label22.AutoSize = true;
             this.label22.Location = new System.Drawing.Point(191, 140);
             this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(58, 13);
+            this.label22.Size = new System.Drawing.Size(57, 13);
             this.label22.TabIndex = 3;
             this.label22.Text = "Max Maps:";
             // 
@@ -1485,7 +1513,7 @@
             this.label21.AutoSize = true;
             this.label21.Location = new System.Drawing.Point(8, 140);
             this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(67, 13);
+            this.label21.Size = new System.Drawing.Size(66, 13);
             this.label21.TabIndex = 3;
             this.label21.Text = "Max Players:";
             // 
@@ -1621,34 +1649,6 @@
             this.label4.Size = new System.Drawing.Size(30, 13);
             this.label4.TabIndex = 20;
             this.label4.Text = "Nick:";
-            // 
-            // hackrank_kick
-            // 
-            this.hackrank_kick.AutoSize = true;
-            this.hackrank_kick.Location = new System.Drawing.Point(13, 226);
-            this.hackrank_kick.Name = "hackrank_kick";
-            this.hackrank_kick.Size = new System.Drawing.Size(193, 17);
-            this.hackrank_kick.TabIndex = 32;
-            this.hackrank_kick.Text = "Kick people who use hackrank after ";
-            this.toolTip.SetToolTip(this.hackrank_kick, "Hackrank kicks people? Or not?");
-            this.hackrank_kick.UseVisualStyleBackColor = true;
-            // 
-            // hackrank_kick_time
-            // 
-            this.hackrank_kick_time.Location = new System.Drawing.Point(212, 224);
-            this.hackrank_kick_time.Name = "hackrank_kick_time";
-            this.hackrank_kick_time.Size = new System.Drawing.Size(60, 21);
-            this.hackrank_kick_time.TabIndex = 33;
-            this.hackrank_kick_time.Text = "5";
-            // 
-            // label36
-            // 
-            this.label36.AutoSize = true;
-            this.label36.Location = new System.Drawing.Point(274, 227);
-            this.label36.Name = "label36";
-            this.label36.Size = new System.Drawing.Size(46, 13);
-            this.label36.TabIndex = 34;
-            this.label36.Text = "Seconds";
             // 
             // PropertyWindow
             // 

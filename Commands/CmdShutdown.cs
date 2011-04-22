@@ -1,4 +1,4 @@
-// shutdown was wrote by jordanneil23 with alot of help from TheMusiKid.
+// shutdown was written by jordanneil23 with alot of help from TheMusiKid.
 namespace MCForge
 {
     using System;

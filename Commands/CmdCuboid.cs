@@ -25,6 +25,7 @@ namespace MCForge
         public override string type { get { return "build"; } }
         public override bool museumUsable { get { return false; } }
         public override LevelPermission defaultRank { get { return LevelPermission.Builder; } }
+        public byte b;
         public CmdCuboid() { }
 
         public override void Use(Player p, string message)
@@ -99,7 +100,7 @@ namespace MCForge
         public void Blockchange2(Player p, ushort x, ushort y, ushort z, byte type)
         {
             p.ClearBlockchange();
-            byte b = p.level.GetTile(x, y, z);
+            b = p.level.GetTile(x, y, z);
             p.SendBlockchange(x, y, z, b);
             CatchPos cpos = (CatchPos)p.blockchangeObject;
             unchecked { if (cpos.type != (byte)-1) type = cpos.type; else type = p.bindings[type]; }
@@ -115,7 +116,7 @@ namespace MCForge
                         for (yy = Math.Min(cpos.y, y); yy <= Math.Max(cpos.y, y); ++yy)
                             for (zz = Math.Min(cpos.z, z); zz <= Math.Max(cpos.z, z); ++zz)
                             {
-                                if (p.level.GetTile(xx, yy, zz) != type) { BufferAdd(buffer, xx, yy, zz); }
+                                if (p.level.GetTile(xx, yy, zz) != type) { BufferAdd(buffer, xx, yy, zz, p); }
                             }
                     break;
                 case SolidType.hollow:
@@ -123,24 +124,24 @@ namespace MCForge
                     for (yy = Math.Min(cpos.y, y); yy <= Math.Max(cpos.y, y); ++yy)
                         for (zz = Math.Min(cpos.z, z); zz <= Math.Max(cpos.z, z); ++zz)
                         {
-                            if (p.level.GetTile(cpos.x, yy, zz) != type) { BufferAdd(buffer, cpos.x, yy, zz); }
-                            if (cpos.x != x) { if (p.level.GetTile(x, yy, zz) != type) { BufferAdd(buffer, x, yy, zz); } }
+                            if (p.level.GetTile(cpos.x, yy, zz) != type) { BufferAdd(buffer, cpos.x, yy, zz, p); }
+                            if (cpos.x != x) { if (p.level.GetTile(x, yy, zz) != type) { BufferAdd(buffer, x, yy, zz, p); } }
                         }
                     if (Math.Abs(cpos.x - x) >= 2)
                     {
                         for (xx = (ushort)(Math.Min(cpos.x, x) + 1); xx <= Math.Max(cpos.x, x) - 1; ++xx)
                             for (zz = Math.Min(cpos.z, z); zz <= Math.Max(cpos.z, z); ++zz)
                             {
-                                if (p.level.GetTile(xx, cpos.y, zz) != type) { BufferAdd(buffer, xx, cpos.y, zz); }
-                                if (cpos.y != y) { if (p.level.GetTile(xx, y, zz) != type) { BufferAdd(buffer, xx, y, zz); } }
+                                if (p.level.GetTile(xx, cpos.y, zz) != type) { BufferAdd(buffer, xx, cpos.y, zz, p); }
+                                if (cpos.y != y) { if (p.level.GetTile(xx, y, zz) != type) { BufferAdd(buffer, xx, y, zz, p); } }
                             }
                         if (Math.Abs(cpos.y - y) >= 2)
                         {
                             for (xx = (ushort)(Math.Min(cpos.x, x) + 1); xx <= Math.Max(cpos.x, x) - 1; ++xx)
                                 for (yy = (ushort)(Math.Min(cpos.y, y) + 1); yy <= Math.Max(cpos.y, y) - 1; ++yy)
                                 {
-                                    if (p.level.GetTile(xx, yy, cpos.z) != type) { BufferAdd(buffer, xx, yy, cpos.z); }
-                                    if (cpos.z != z) { if (p.level.GetTile(xx, yy, z) != type) { BufferAdd(buffer, xx, yy, z); } }
+                                    if (p.level.GetTile(xx, yy, cpos.z) != type) { BufferAdd(buffer, xx, yy, cpos.z, p); }
+                                    if (cpos.z != z) { if (p.level.GetTile(xx, yy, z) != type) { BufferAdd(buffer, xx, yy, z, p); } }
                                 }
                         }
                     }
@@ -149,8 +150,8 @@ namespace MCForge
                     for (yy = Math.Min(cpos.y, y); yy <= Math.Max(cpos.y, y); ++yy)
                         for (zz = Math.Min(cpos.z, z); zz <= Math.Max(cpos.z, z); ++zz)
                         {
-                            if (p.level.GetTile(cpos.x, yy, zz) != type) { BufferAdd(buffer, cpos.x, yy, zz); }
-                            if (cpos.x != x) { if (p.level.GetTile(x, yy, zz) != type) { BufferAdd(buffer, x, yy, zz); } }
+                            if (p.level.GetTile(cpos.x, yy, zz) != type) { BufferAdd(buffer, cpos.x, yy, zz, p); }
+                            if (cpos.x != x) { if (p.level.GetTile(x, yy, zz) != type) { BufferAdd(buffer, x, yy, zz, p); } }
                         }
                     if (Math.Abs(cpos.x - x) >= 2)
                     {
@@ -159,8 +160,8 @@ namespace MCForge
                             for (xx = (ushort)(Math.Min(cpos.x, x) + 1); xx <= Math.Max(cpos.x, x) - 1; ++xx)
                                 for (yy = (ushort)(Math.Min(cpos.y, y)); yy <= Math.Max(cpos.y, y); ++yy)
                                 {
-                                    if (p.level.GetTile(xx, yy, cpos.z) != type) { BufferAdd(buffer, xx, yy, cpos.z); }
-                                    if (cpos.z != z) { if (p.level.GetTile(xx, yy, z) != type) { BufferAdd(buffer, xx, yy, z); } }
+                                    if (p.level.GetTile(xx, yy, cpos.z) != type) { BufferAdd(buffer, xx, yy, cpos.z, p); }
+                                    if (cpos.z != z) { if (p.level.GetTile(xx, yy, z) != type) { BufferAdd(buffer, xx, yy, z, p); } }
                                 }
                         }
                     }
@@ -177,7 +178,7 @@ namespace MCForge
                             for (zz = Math.Min(cpos.z, z); zz <= Math.Max(cpos.z, z); ++zz)
                             {
                                 Checked = !Checked;
-                                if (Checked && p.level.GetTile(xx, yy, zz) != type) BufferAdd(buffer, xx, yy, zz);
+                                if (Checked && p.level.GetTile(xx, yy, zz) != type) BufferAdd(buffer, xx, yy, zz, p);
                             } Checked = !startZ;
                         } Checked = !startY;
                     }
@@ -185,24 +186,24 @@ namespace MCForge
                 case SolidType.wire:
                     for (xx = Math.Min(cpos.x, x); xx <= Math.Max(cpos.x, x); ++xx)
                     {
-                        BufferAdd(buffer, xx, y, z);
-                        BufferAdd(buffer, xx, y, cpos.z);
-                        BufferAdd(buffer, xx, cpos.y, z);
-                        BufferAdd(buffer, xx, cpos.y, cpos.z);
+                        BufferAdd(buffer, xx, y, z, p);
+                        BufferAdd(buffer, xx, y, cpos.z, p);
+                        BufferAdd(buffer, xx, cpos.y, z, p);
+                        BufferAdd(buffer, xx, cpos.y, cpos.z, p);
                     }
                     for (yy = Math.Min(cpos.y, y); yy <= Math.Max(cpos.y, y); ++yy)
                     {
-                        BufferAdd(buffer, x, yy, z);
-                        BufferAdd(buffer, x, yy, cpos.z);
-                        BufferAdd(buffer, cpos.x, yy, z);
-                        BufferAdd(buffer, cpos.x, yy, cpos.z);
+                        BufferAdd(buffer, x, yy, z, p);
+                        BufferAdd(buffer, x, yy, cpos.z, p);
+                        BufferAdd(buffer, cpos.x, yy, z, p);
+                        BufferAdd(buffer, cpos.x, yy, cpos.z, p);
                     }
                     for (zz = Math.Min(cpos.z, z); zz <= Math.Max(cpos.z, z); ++zz)
                     {
-                        BufferAdd(buffer, x, y, zz);
-                        BufferAdd(buffer, x, cpos.y, zz);
-                        BufferAdd(buffer, cpos.x, y, zz);
-                        BufferAdd(buffer, cpos.x, cpos.y, zz);
+                        BufferAdd(buffer, x, y, zz, p);
+                        BufferAdd(buffer, x, cpos.y, zz, p);
+                        BufferAdd(buffer, cpos.x, y, zz, p);
+                        BufferAdd(buffer, cpos.x, cpos.y, zz, p);
                     }
                     break;
                 case SolidType.random:
@@ -211,7 +212,7 @@ namespace MCForge
                         for (yy = Math.Min(cpos.y, y); yy <= Math.Max(cpos.y, y); ++yy)
                             for (zz = Math.Min(cpos.z, z); zz <= Math.Max(cpos.z, z); ++zz)
                             {
-                                if (rand.Next(1, 11) <= 5 && p.level.GetTile(xx, yy, zz) != type) { BufferAdd(buffer, xx, yy, zz); }
+                                if (rand.Next(1, 11) <= 5 && p.level.GetTile(xx, yy, zz) != type) { BufferAdd(buffer, xx, yy, zz, p); }
                             }
                     break;
             }
@@ -264,12 +265,21 @@ namespace MCForge
             {
                 p.level.Blockchange(p, pos.x, pos.y, pos.z, type);
             });
-
+            /*
+            //testing to see if this helps with anything
+            buffer.Clear();
+            buffer = null;
+            GC.Collect();
+            GC.WaitForPendingFinalizers();// end testing*/
             if (p.staticCommands) p.Blockchange += new Player.BlockchangeEventHandler(Blockchange1);
         }
-        void BufferAdd(List<Pos> list, ushort x, ushort y, ushort z)
+        void BufferAdd(List<Pos> list, ushort x, ushort y, ushort z, Player p)
         {
-            Pos pos; pos.x = x; pos.y = y; pos.z = z; list.Add(pos);
+            Pos pos; pos.x = x; pos.y = y; pos.z = z;
+            //Antigrief check
+            if (Server.IsAntiGrief && !AntiGrief.Check(p, b, x, y, z))
+                return;
+            list.Add(pos);
         }
         struct Pos
         {
