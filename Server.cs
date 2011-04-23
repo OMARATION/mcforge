@@ -114,7 +114,10 @@ namespace MCForge
         public static DateTime restarttime;
 
         public static bool chatmod = false;
-
+		// Infection-related vars:
+        public static Boolean AllowTNT = false;
+        public static List<Player> People = new List<Player>();
+        public static string Time = "";
         //Global VoteKick In Progress Flag
         public static bool voteKickInProgress = false;
         public static int voteKickVotesNeeded = 0;

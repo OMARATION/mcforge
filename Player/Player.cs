@@ -172,7 +172,10 @@ namespace MCForge
         public string lastCMD = "";
 
         public Level level = Server.mainLevel;
-        public bool Loading = true;     //True if player is loading a map.
+        public bool Loading = true;     //True if player is loading a map
+		// Infection-related vars:
+        public bool Creeper = false;
+        public int lives = 10;
 
         public delegate void BlockchangeEventHandler(Player p, ushort x, ushort y, ushort z, byte type);
         public event BlockchangeEventHandler Blockchange = null;
@@ -201,7 +204,9 @@ namespace MCForge
 
         // Extra storage for custom commands
         public Dictionary<string, string> Extras = new Dictionary<string, string>();
-
+        //Infection stuff
+        public string oldname;
+        public string oldtitle;
         public bool loggedIn = false;
         public Player(Socket s)
         {
