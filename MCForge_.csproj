@@ -89,10 +89,13 @@
     <Compile Include="Commands\CmdChangeLog.cs" />
     <Compile Include="Commands\CmdCompload.cs" />
     <Compile Include="Commands\CmdEconomy.cs" />
+    <Compile Include="Commands\CmdEllipse.cs" />
+    <Compile Include="Commands\CmdFakePay.cs" />
     <Compile Include="Commands\CmdFakerank.cs" />
     <Compile Include="Commands\CmdFetch.cs" />
     <Compile Include="Commands\CmdGlobalCLS.cs" />
     <Compile Include="Commands\CmdHackRank.cs" />
+    <Compile Include="Commands\CmdHigh5.cs" />
     <Compile Include="Commands\CmdImpersonate.cs" />
     <Compile Include="Commands\CmdInfection.cs" />
     <Compile Include="Commands\CmdKickAll.cs" />
@@ -105,7 +108,9 @@
     <Compile Include="Commands\CmdOverseer.cs" />
     <Compile Include="Commands\CmdPlayerCLS.cs" />
     <Compile Include="Commands\CmdPossess.cs" />
+    <Compile Include="Commands\CmdRagequit.cs" />
     <Compile Include="Commands\CmdReload.cs" />
+    <Compile Include="Commands\CmdReview.cs" />
     <Compile Include="Commands\CmdSeen.cs" />
     <Compile Include="Commands\CmdSendCmd.cs" />
     <Compile Include="Commands\CmdShutdown.cs" />
@@ -140,6 +145,7 @@
     <Compile Include="Commands\CmdUnflood.cs" />
     <Compile Include="Commands\CmdUnlock.cs" />
     <Compile Include="Commands\CmdXban.cs" />
+    <Compile Include="Commands\CmdXmute.cs" />
     <Compile Include="Commands\CmdXspawn.cs" />
     <Compile Include="Commands\CmdXundo.cs" />
     <Compile Include="Commands\CmdZombieSpawn.cs" />

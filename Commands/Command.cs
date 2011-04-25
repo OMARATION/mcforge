@@ -76,7 +76,9 @@ namespace MCForge
             all.Add(new CmdEconomyBuyTitle());
             all.Add(new CmdEconomySetup());
             all.Add(new CmdEconomyStats());
+			all.Add(new CmdEllipse());
             all.Add(new CmdEmote());
+			all.Add(new CmdFakePay());
             all.Add(new CmdFakeRank());
             all.Add(new CmdFetch());
             all.Add(new CmdFill());
@@ -95,6 +97,7 @@ namespace MCForge
             // all.Add(new CmdHeartbeat()); DEBUG COMMAND DO NOT USE
             all.Add(new CmdHelp());
             all.Add(new CmdHide());
+			all.Add(new CmdHigh5());
             all.Add(new CmdHighlight());
             all.Add(new CmdHollow());
             all.Add(new CmdHost());
@@ -156,6 +159,7 @@ namespace MCForge
             all.Add(new CmdPlayers());
             all.Add(new CmdPortal());
             all.Add(new CmdPossess());
+			all.Add(new CmdRagequit());
             all.Add(new CmdRainbow());
             all.Add(new CmdRedo());
             all.Add(new CmdReload());
@@ -170,6 +174,7 @@ namespace MCForge
             all.Add(new CmdRestore());
             all.Add(new CmdRetrieve());
             all.Add(new CmdReveal());
+			all.Add(new CmdReview());
             all.Add(new CmdRide());
             all.Add(new CmdRoll());
             all.Add(new CmdRules());
@@ -227,6 +232,7 @@ namespace MCForge
             all.Add(new CmdXban());
 			all.Add(new CmdXhide());
             all.Add(new CmdXJail());
+			all.Add(new CmdXmute());
             all.Add(new CmdXspawn());
             all.Add(new CmdXundo());
             all.Add(new CmdZone());
